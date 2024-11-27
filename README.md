@@ -6,6 +6,7 @@
 1. [Introducción](#introducción)
 2. [Características principales](#características-principales)
 3. [Tecnologías utilizadas](#tecnologías-utilizadas)
+4. [Instalación y configuración](#instalación-y-configuración)
 
 ---
 
@@ -59,7 +60,7 @@ Sigue estos pasos para configurar y ejecutar **Parkio** en tu entorno local:
 ### 1️⃣ **Clonar el repositorio**
 Utiliza el siguiente comando para clonar el proyecto desde GitHub:  
 ```bash
-git clone https://github.com/tu-usuario/parkio.git
+git clone https://github.com/JamesGalvis/Parkio.git
 cd parkio
 ```
 
