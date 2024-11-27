@@ -38,6 +38,9 @@
 
 ## **Tecnologías utilizadas**
 
+### **Entorno de ejecución**
+- [Bun](https://bun.sh/)
+
 ### **Frontend**
 - [Next.js](https://nextjs.org/) 14  
 - [Tailwind CSS](https://tailwindcss.com/)  
