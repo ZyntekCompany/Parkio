@@ -1,6 +1,4 @@
-# **Parkio** 
-
-**Breve descripción del sistema y su propósito principal.**
+# **Parkio - Sistema de Gestión de Parqueaderos** 
 
 ---
 
@@ -8,11 +6,6 @@
 1. [Introducción](#introducción)
 2. [Características principales](#características-principales)
 3. [Tecnologías utilizadas](#tecnologías-utilizadas)
-4. [Instalación y configuración](#instalación-y-configuración)
-5. [Uso](#uso)
-6. [Contribución](#contribución)
-7. [Licencia](#licencia)
-
 
 ---
 
@@ -26,11 +19,11 @@
 
 ### 🕒 **Gestión de clientes por hora y mensuales**
 - Registro rápido y sencillo para clientes por fracción (hora).
-- Administración avanzada de clientes mensuales con renovaciones automáticas.
+- Administración avanzada de clientes mensuales con envió de correos electrónicos para usuarios proximos a renovar el servicio.
 
 ### 👥 **Gestión de empleados y horarios**
 - Control de empleados, roles y permisos.
-- Creación de horarios personalizados y registro de asistencia.
+- Creación de horarios personalizados.
 
 ### 📊 **Analíticas y reportes**
 - Visualización de métricas clave del negocio mediante gráficas interactivas.
@@ -49,7 +42,6 @@
 - [Tailwind CSS](https://tailwindcss.com/)  
 
 ### **Backend**
-- [Express.js](https://expressjs.com/) con TypeScript  
 - [Prisma ORM](https://www.prisma.io/)  
 - [PostgreSQL](https://www.postgresql.org/)  
 
