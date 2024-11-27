@@ -87,7 +87,7 @@ BREVO_API_KEY=tu_brevo_api_url
 ```
 
 ### 4️⃣ **Inicializar la base de datos**
-Ejecuta los sigueintes comandos para configurar la base de datos:  
+Ejecuta los siguientes comandos para configurar la base de datos:  
 ```bash
 bunx prisma generate
 bunx prisma db push
