@@ -48,3 +48,16 @@
 ### **Autenticación**
 - [Auth.js](https://authjs.dev/)  
 
+---
+
+## **Instalación y Configuración**
+
+Sigue estos pasos para configurar y ejecutar **Parkio** en tu entorno local:
+
+---
+
+### 1️⃣ **Clonar el repositorio**
+Utiliza el siguiente comando para clonar el proyecto desde GitHub:  
+```bash
+git clone https://github.com/tu-usuario/parkio.git
+cd parkio
