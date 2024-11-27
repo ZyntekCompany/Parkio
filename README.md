@@ -61,3 +61,9 @@ Utiliza el siguiente comando para clonar el proyecto desde GitHub:
 ```bash
 git clone https://github.com/tu-usuario/parkio.git
 cd parkio
+
+### 1️⃣ **Clonar el repositorio**
+Utiliza el siguiente comando para clonar el proyecto desde GitHub:  
+```bash
+git clone https://github.com/tu-usuario/parkio.git
+cd parkio
