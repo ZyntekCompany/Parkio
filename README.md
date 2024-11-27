@@ -61,9 +61,43 @@ Utiliza el siguiente comando para clonar el proyecto desde GitHub:
 ```bash
 git clone https://github.com/tu-usuario/parkio.git
 cd parkio
+```
 
-### 1️⃣ **Clonar el repositorio**
-Utiliza el siguiente comando para clonar el proyecto desde GitHub:  
+### 2️⃣ **Instalar dependencias**
+Instala las dependencias necesarias para el proyecto con:  
 ```bash
-git clone https://github.com/tu-usuario/parkio.git
-cd parkio
+bun install
+```
+
+### 3️⃣ **Configurar variables de entorno**
+Crea un archivo .env en la raíz del proyecto con la siguiente configuración:  
+```bash
+# Base de datos
+DATABASE_URL=tu_url_de_postgresql
+
+# Autenticación
+AUTH_SECRET=tu_secreto_de_autenticacion
+
+# Url de redireccion por defecto de la autenticación
+DEFAULT_LOGIN_REDIRECT=/
+
+# API de envio de correos con Brevo
+BREVO_API_KEY=tu_brevo_api_url
+```
+
+### 4️⃣ **Inicializar la base de datos**
+Ejecuta los sigueintes comandos para configurar la base de datos:  
+```bash
+bunx prisma generate
+bunx prisma db push
+```
+
+### 5️⃣ **Ejecutar el proyecto**
+Para iniciar un servidor local, usa el siguiente comando:  
+```bash
+bunx run dev
+```
+Accede al proyecto en tu navegador en:
+```bash
+http://localhost:3000
+```
