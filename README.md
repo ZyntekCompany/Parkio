@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# **[Nombre del proyecto]** 🚗
 
-## Getting Started
+**Breve descripción del sistema y su propósito principal.**
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## **Tabla de contenido**
+1. [Introducción](#introducción)
+2. [Características principales](#características-principales)
+3. [Tecnologías utilizadas](#tecnologías-utilizadas)
+4. [Instalación y configuración](#instalación-y-configuración)
+5. [Uso](#uso)
+6. [Contribución](#contribución)
+7. [Licencia](#licencia)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## **Introducción**
 
-## Learn More
+**Parkio** está diseñado para optimizar y automatizar las operaciones de parqueaderos, ayudando a los administradores a gestionar clientes, empleados y el desempeño general del negocio. Su enfoque intuitivo y funcional asegura que cualquier usuario pueda operar el sistema con facilidad.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## **Características principales**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### 🕒 **Gestión de clientes por hora y mensuales**
+- Registro rápido y sencillo para clientes por fracción (hora).
+- Administración avanzada de clientes mensuales con renovaciones automáticas.
 
-## Deploy on Vercel
+### 👥 **Gestión de empleados y horarios**
+- Control de empleados, roles y permisos.
+- Creación de horarios personalizados y registro de asistencia.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 📊 **Analíticas y reportes**
+- Visualización de métricas clave del negocio mediante gráficas interactivas.
+- Generación de reportes detallados de ingresos, ocupación y desempeño.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### 💡 **Otros beneficios**
+- Interfaz responsiva para uso desde cualquier dispositivo.
+- Seguridad robusta en el manejo de datos y autenticación de usuarios.
+
+---
+
+## **Tecnologías utilizadas**
+
+### **Frontend**
+- [Next.js](https://nextjs.org/) 14  
+- [Tailwind CSS](https://tailwindcss.com/)  
+
+### **Backend**
+- [Express.js](https://expressjs.com/) con TypeScript  
+- [Prisma ORM](https://www.prisma.io/)  
+- [PostgreSQL](https://www.postgresql.org/)  
+
+### **Autenticación**
+- [Auth.js](https://authjs.dev/)  
+
