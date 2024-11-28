@@ -5,24 +5,40 @@ import { revalidatePath } from "next/cache";
 
 import { db } from "@/lib/db";
 import { FeeColumns } from "@/app/(dashboard)/business-configuration/_components/fee/columns";
-import { currentRole } from "@/lib/auth-user";
+import { currentRole, currentUser } from "@/lib/auth-user";
 import {
   CreateClientTypeSchema,
   CreateFeeSchema,
   CreateVehicleTypeSchema,
 } from "@/schemas/business-config";
 
-export async function getVehicleTypes() {
+export async function getCurrentParkingLot() {
   try {
-    const role = await currentRole();
+    const loggedUser = await currentUser();
 
-    const isAdmin = role === "Admin" || role === "SuperAdmin";
-
-    if (!isAdmin) {
-      return [];
+    if (!loggedUser) {
+      return null;
     }
 
-    return await db.vehicleType.findMany();
+    const existingParking = await db.parkingLot.findFirst({
+      where: { id: loggedUser.parkingLotId! },
+    });
+
+    if (!existingParking) return null;
+
+    return existingParking;
+  } catch {
+    return null;
+  }
+}
+
+export async function getVehicleTypes() {
+  try {
+    const loggedUser = await currentUser();
+
+    return await db.vehicleType.findMany({
+      where: { parkingLotId: loggedUser?.parkingLotId! },
+    });
   } catch {
     return [];
   }
@@ -30,15 +46,11 @@ export async function getVehicleTypes() {
 
 export async function getClientTypes() {
   try {
-    const role = await currentRole();
+    const loggedUser = await currentUser();
 
-    const isAdmin = role === "Admin" || role === "SuperAdmin";
-
-    if (!isAdmin) {
-      return [];
-    }
-
-    return await db.clientType.findMany();
+    return await db.clientType.findMany({
+      where: { parkingLotId: loggedUser?.parkingLotId! },
+    });
   } catch {
     return [];
   }
@@ -47,14 +59,12 @@ export async function getClientTypes() {
 export async function getFees() {
   try {
     const role = await currentRole();
-
-    const isAdmin = role === "Admin" || role === "SuperAdmin";
-
-    if (!isAdmin) {
-      return [];
-    }
+    const loggedUser = await currentUser();
 
     const fees = await db.vehicleType.findMany({
+      where: {
+        parkingLotId: loggedUser?.parkingLotId!,
+      },
       include: {
         fees: {
           include: {
@@ -106,6 +116,7 @@ export async function createVehicleType(
   }
 
   try {
+    const loggedUser = await currentUser();
     const role = await currentRole();
 
     const isAdmin = role === "Admin" || role === "SuperAdmin";
@@ -116,8 +127,8 @@ export async function createVehicleType(
 
     const { name } = result.data;
 
-    const existingVehicleType = await db.vehicleType.findUnique({
-      where: { name },
+    const existingVehicleType = await db.vehicleType.findFirst({
+      where: { name, parkingLotId: loggedUser?.parkingLotId! },
     });
 
     if (existingVehicleType) {
@@ -125,12 +136,20 @@ export async function createVehicleType(
     }
 
     await db.vehicleType.create({
-      data: { name },
+      data: {
+        name,
+        parkingLot: {
+          connect: {
+            id: loggedUser?.parkingLotId!,
+          },
+        },
+      },
     });
 
     revalidatePath("/business-configuration");
     return { success: "Tipo de vehiculo creado." };
-  } catch {
+  } catch (error) {
+    console.log(error);
     return { error: "Algo salió mal en el proceso." };
   }
 }
@@ -185,6 +204,7 @@ export async function createClientType(
   }
 
   try {
+    const loggedUser = await currentUser();
     const role = await currentRole();
 
     const isAdmin = role === "Admin" || role === "SuperAdmin";
@@ -195,8 +215,8 @@ export async function createClientType(
 
     const { name } = result.data;
 
-    const existingClientType = await db.clientType.findUnique({
-      where: { name },
+    const existingClientType = await db.clientType.findFirst({
+      where: { name, parkingLotId: loggedUser?.parkingLotId! },
     });
 
     if (existingClientType) {
@@ -204,7 +224,14 @@ export async function createClientType(
     }
 
     await db.clientType.create({
-      data: { name },
+      data: {
+        name,
+        parkingLot: {
+          connect: {
+            id: loggedUser?.parkingLotId!,
+          },
+        },
+      },
     });
 
     revalidatePath("/business-configuration");
@@ -262,6 +289,7 @@ export async function createFees(values: z.infer<typeof CreateFeeSchema>) {
   }
 
   try {
+    const loggedUser = await currentUser();
     const role = await currentRole();
 
     const isAdmin = role === "Admin" || role === "SuperAdmin";
@@ -273,7 +301,11 @@ export async function createFees(values: z.infer<typeof CreateFeeSchema>) {
     const { vehicleTypeId, clientTypeId, hourlyFee, monthlyFee } = result.data;
 
     const existingFee = await db.fee.findFirst({
-      where: { vehicleTypeId, clientTypeId },
+      where: {
+        vehicleTypeId,
+        clientTypeId,
+        parkingLotId: loggedUser?.parkingLotId!,
+      },
     });
 
     if (existingFee) {
@@ -285,6 +317,11 @@ export async function createFees(values: z.infer<typeof CreateFeeSchema>) {
 
     await db.fee.create({
       data: {
+        parkingLot: {
+          connect: {
+            id: loggedUser?.parkingLotId!,
+          },
+        },
         vehicleType: {
           connect: {
             id: vehicleTypeId,
@@ -302,6 +339,11 @@ export async function createFees(values: z.infer<typeof CreateFeeSchema>) {
 
     await db.fee.create({
       data: {
+        parkingLot: {
+          connect: {
+            id: loggedUser?.parkingLotId!,
+          },
+        },
         vehicleType: {
           connect: {
             id: vehicleTypeId,
@@ -317,6 +359,7 @@ export async function createFees(values: z.infer<typeof CreateFeeSchema>) {
       },
     });
 
+    revalidatePath("/");
     revalidatePath("/business-configuration");
     return { success: "Tarifas creadas." };
   } catch {
@@ -327,6 +370,7 @@ export async function createFees(values: z.infer<typeof CreateFeeSchema>) {
 export async function deleteFees(data: FeeColumns) {
   try {
     const role = await currentRole();
+    const loggedUser = await currentUser();
 
     const isAdmin = role === "Admin" || role === "SuperAdmin";
 
@@ -337,7 +381,7 @@ export async function deleteFees(data: FeeColumns) {
     const { clientTypeId, vehicleTypeId } = data;
 
     const existingClientType = await db.clientType.findUnique({
-      where: { id: clientTypeId },
+      where: { id: clientTypeId, parkingLotId: loggedUser?.parkingLotId! },
       include: {
         clients: true,
       },
@@ -373,6 +417,7 @@ export async function updateFees(
 
   try {
     const role = await currentRole();
+    const loggedUser = await currentUser();
 
     const isAdmin = role === "Admin" || role === "SuperAdmin";
 
@@ -383,7 +428,11 @@ export async function updateFees(
     const { vehicleTypeId, clientTypeId, hourlyFee, monthlyFee } = result.data;
 
     const existingFee = await db.fee.findFirst({
-      where: { vehicleTypeId, clientTypeId },
+      where: {
+        vehicleTypeId,
+        clientTypeId,
+        parkingLotId: loggedUser?.parkingLotId!,
+      },
     });
 
     if (!existingFee) {

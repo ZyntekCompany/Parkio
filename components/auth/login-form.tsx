@@ -1,9 +1,10 @@
 "use client";
 
 import { z } from "zod";
+import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
+import { Loader } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -27,6 +28,8 @@ import { cn } from "@/lib/utils";
 export function LoginForm() {
   const searchParams = useSearchParams();
 
+  const [error, setError] = useState<string | undefined>(undefined);
+
   const urlError =
     searchParams.get("error") === "OAuthAccountNotLinked"
       ? "El correo ya está en uso con otra cuenta!"
@@ -47,7 +50,7 @@ export function LoginForm() {
       const response = await login(values);
 
       if (response?.error) {
-        toast.error(response.error);
+        setError(response.error);
         form.resetField("password");
       }
 
@@ -67,7 +70,7 @@ export function LoginForm() {
       >
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="space-y-4 mt-4">
+            <div className="space-y-4 mt-6">
               <FormField
                 name="email"
                 control={form.control}
@@ -112,7 +115,7 @@ export function LoginForm() {
                 )}
               />
 
-              <FormStateMessage type="Error" message={urlError} />
+              <FormStateMessage type="Error" message={error || urlError} />
 
               <div className="pt-3 pb-2">
                 <Button
@@ -123,7 +126,7 @@ export function LoginForm() {
                   className="w-full font-semibold rounded-lg"
                 >
                   {isSubmitting && (
-                    <Loader2 className="h-5 w-5 mr-3 animate-spin" />
+                    <Loader className="h-5 w-5 animate-spin" />
                   )}
                   Iniciar sesión
                 </Button>

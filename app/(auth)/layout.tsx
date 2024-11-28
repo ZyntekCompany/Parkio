@@ -10,7 +10,7 @@ export default function AuthLayout({
       <div className="hidden md-plus:flex flex-col justify-between w-[38%] 2xl:w-[40%] min-w-[480px]  bg-gradient-to-r from-violet-600 to-indigo-600 ">
         <Logo
           dinamicTextColor
-          name="Parking NoA"
+          name="Parkio"
           fill="#fefeff"
           className="py-12 px-9"
         />

@@ -1,19 +1,20 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { RegisterSchema, UpdateSchema } from "@/schemas/auth";
+import { CreateEmployeeSchema, UpdateSchema } from "@/schemas/auth";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 import { UserRole } from "@prisma/client";
 import { UserColumns } from "@/app/(dashboard)/employee-management/_components/columns";
 import { getUserByEmail } from "../user";
-import { currentRole } from "@/lib/auth-user";
+import { currentRole, currentUser } from "@/lib/auth-user";
 import { sendEmployeeCredentialsEmail } from "@/lib/brevo";
-import { getParkingLotName } from "../common";
 
-export async function createUser(credentials: z.infer<typeof RegisterSchema>) {
-  const result = RegisterSchema.safeParse(credentials);
+export async function createEmployee(
+  credentials: z.infer<typeof CreateEmployeeSchema>
+) {
+  const result = CreateEmployeeSchema.safeParse(credentials);
 
   if (result.error) {
     return { error: "Datos invalidos!" };
@@ -22,6 +23,7 @@ export async function createUser(credentials: z.infer<typeof RegisterSchema>) {
   const { name, phone, email, password } = result.data;
 
   try {
+    const loggedUser = await currentUser();
     const role = await currentRole();
 
     const isAdmin = role === "Admin" || role === "SuperAdmin";
@@ -45,16 +47,22 @@ export async function createUser(credentials: z.infer<typeof RegisterSchema>) {
         phone,
         password: hashedPassword,
         role: "Empleado",
+        parkingLotId: loggedUser?.parkingLotId!,
+      },
+      include: {
+        parkingLot: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
-
-    const parkingName = await getParkingLotName();
 
     sendEmployeeCredentialsEmail(
       newEmployee.email!,
       newEmployee.name!,
       password,
-      parkingName
+      newEmployee.parkingLot?.name!
     );
 
     revalidatePath("/employee-management");

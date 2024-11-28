@@ -94,7 +94,7 @@ export const columns: ColumnDef<UserColumns>[] = [
   },
   {
     accessorKey: "createdAt",
-    header: "Fecha de inicio",
+    header: () => <div className="min-w-[120px]">Fecha de inicio</div>,
     cell: ({ row }) => {
       const createdAt: string = row.getValue("createdAt");
 

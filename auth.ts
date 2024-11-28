@@ -34,6 +34,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.phone = token.phone as string;
       }
 
+      if (token.parkingLotId && session.user) {
+        session.user.parkingLotId = token.parkingLotId as string;
+      }
+
       if (session.user) {
         session.user.name = token.name as string;
         session.user.image = token.image as string;
@@ -52,6 +56,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       token.name = existingUser.name;
       token.image = existingUser.image;
       token.phone = existingUser.phone;
+      token.parkingLotId = existingUser.parkingLotId;
 
       return token;
     },

@@ -16,7 +16,7 @@ interface SidebarRouteItemProps {
   url: string;
   Icon: LucideIcon;
   showMenuBadge?: boolean;
-  menuBadgeLabel?: string;
+  menuBadgeLabel?: number;
 }
 
 export function RouteItem({

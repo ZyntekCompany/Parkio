@@ -20,7 +20,7 @@ export type FeeColumns = {
 export const columns: ColumnDef<FeeColumns>[] = [
   {
     accessorKey: "vehicleType",
-    header: "Tipo de vehículo",
+    header: () => <div className="min-w-[120px]">Tipo de vehículo</div>,
     cell: ({ row }) => {
       const vehicleType: string = row.getValue("vehicleType");
 
@@ -33,7 +33,7 @@ export const columns: ColumnDef<FeeColumns>[] = [
   },
   {
     accessorKey: "clientType",
-    header: "Tipo de cliente",
+    header: () => <div className="min-w-[120px]">Tipo de cliente</div>,
     cell: ({ row }) => {
       const clientType: string = row.getValue("clientType");
 
@@ -46,7 +46,7 @@ export const columns: ColumnDef<FeeColumns>[] = [
   },
   {
     accessorKey: "hourlyFee",
-    header: "Tarifa por hora",
+    header: () => <div className="min-w-[120px]">Tarifa por hora</div>,
     cell: ({ row }) => {
       const hourlyFee: number = row.getValue("hourlyFee");
 
@@ -59,7 +59,7 @@ export const columns: ColumnDef<FeeColumns>[] = [
   },
   {
     accessorKey: "monthlyFee",
-    header: "Tarifa por mes",
+    header: () => <div className="min-w-[120px]">Tarifa por mes</div>,
     cell: ({ row }) => {
       const monthlyFee: number = row.getValue("monthlyFee");
 

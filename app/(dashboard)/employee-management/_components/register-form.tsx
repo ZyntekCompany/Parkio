@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Loader2 } from "lucide-react";
+import { Loader } from "lucide-react";
 import { toast } from "sonner";
 
 import {
@@ -18,11 +18,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PasswordInput } from "@/components/auth/password-input";
-import { RegisterSchema } from "@/schemas/auth";
 import { cn } from "@/lib/utils";
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
-import { createUser } from "@/actions/employee-management";
+import { createEmployee } from "@/actions/employee-management";
+import { CreateEmployeeSchema } from "@/schemas/auth";
 
 interface RegisterFormProps {
   buttonLabel?: string;
@@ -30,8 +30,8 @@ interface RegisterFormProps {
 }
 
 export function RegisterForm({ buttonLabel, closeDialog }: RegisterFormProps) {
-  const form = useForm<z.infer<typeof RegisterSchema>>({
-    resolver: zodResolver(RegisterSchema),
+  const form = useForm<z.infer<typeof CreateEmployeeSchema>>({
+    resolver: zodResolver(CreateEmployeeSchema),
     defaultValues: {
       name: "",
       phone: "",
@@ -42,9 +42,9 @@ export function RegisterForm({ buttonLabel, closeDialog }: RegisterFormProps) {
 
   const { isSubmitting, isValid } = form.formState;
 
-  const onSubmit = async (values: z.infer<typeof RegisterSchema>) => {
+  const onSubmit = async (values: z.infer<typeof CreateEmployeeSchema>) => {
     try {
-      const { error, success } = await createUser(values);
+      const { error, success } = await createEmployee(values);
 
       if (error) {
         toast.error("Error", {
@@ -76,7 +76,7 @@ export function RegisterForm({ buttonLabel, closeDialog }: RegisterFormProps) {
                 <FormLabel>Nombre</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Ingresa tu nombre"
+                    placeholder="Nombre del empleado"
                     disabled={isSubmitting}
                     className={cn(
                       fieldState.invalid &&
@@ -92,7 +92,7 @@ export function RegisterForm({ buttonLabel, closeDialog }: RegisterFormProps) {
           <FormField
             name="phone"
             control={form.control}
-            render={({ field, fieldState }) => (
+            render={({ field }) => (
               <FormItem>
                 <FormLabel>Teléfono</FormLabel>
                 <FormControl>
@@ -118,7 +118,7 @@ export function RegisterForm({ buttonLabel, closeDialog }: RegisterFormProps) {
                 <FormControl>
                   <Input
                     type="email"
-                    placeholder="Ingresa tu correo"
+                    placeholder="Correo del empleado"
                     disabled={isSubmitting}
                     className={cn(
                       fieldState.invalid &&
@@ -166,7 +166,7 @@ export function RegisterForm({ buttonLabel, closeDialog }: RegisterFormProps) {
               className="w-full font-semibold"
             >
               {isSubmitting && (
-                <Loader2 className="h-5 w-5 mr-3 animate-spin" />
+                <Loader className="h-5 w-5 animate-spin" />
               )}
               {buttonLabel ? buttonLabel : "Registrarse"}
             </Button>

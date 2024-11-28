@@ -39,7 +39,7 @@ export function AlertModal({
           onClick={onConfirm}
           className="dark:bg-red-500"
         >
-          {isLoading && <Loader className="size-4 mr-2 animate-spin" />}
+          {isLoading && <Loader className="size-4 animate-spin" />}
           Continuar
         </Button>
       </div>

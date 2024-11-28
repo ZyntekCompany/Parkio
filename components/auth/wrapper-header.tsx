@@ -9,7 +9,7 @@ export function WrapperHeader({ title, subtitle }: WrapperHeaderProps) {
   return (
     <div className="flex flex-col items-center gap-2 pt-0">
       <Logo
-        name="Parking NoA"
+        name="Parkio"
         dinamicTextColor
         className="md-plus:hidden mb-6 flex flex-col"
       />

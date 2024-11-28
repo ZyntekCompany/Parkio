@@ -6,8 +6,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { getCurrentParkingLot } from "@/actions/business-config";
 
-export function Header() {
+export async function Header() {
+  const currentParkingLot = await getCurrentParkingLot();
+
   return (
     <SidebarHeader>
       <SidebarMenu>
@@ -21,7 +24,9 @@ export function Header() {
                 <CarFront className="size-4" />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">Parking NoA</span>
+                <span className="truncate font-semibold">
+                  {currentParkingLot?.name}
+                </span>
                 <span className="truncate text-xs">Empresa</span>
               </div>
             </SidebarMenuButton>

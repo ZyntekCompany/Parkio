@@ -14,10 +14,15 @@ import { cn } from "@/lib/utils";
 import { RouteItem } from "@/components/navigation/sidebar/route-item";
 
 interface ContentProps {
+  clientsCount: {
+    monthlyClientsCount: number;
+    hourlyClientsCount: number;
+  };
   isAdmin: boolean;
+  hasFees: boolean;
 }
 
-export function Content({ isAdmin }: ContentProps) {
+export function Content({ isAdmin, hasFees, clientsCount }: ContentProps) {
   return (
     <SidebarContent>
       <SidebarGroup>
@@ -29,23 +34,32 @@ export function Content({ isAdmin }: ContentProps) {
         </SidebarGroupContent>
       </SidebarGroup>
 
-      <SidebarGroup>
-        <SidebarGroupLabel>Gestión de Clientes</SidebarGroupLabel>
-        <SidebarGroupContent>
-          <SidebarMenu>
-            {employeeRoutes.map(({ url, icon: Icon, title }) => (
-              <RouteItem
-                key={url}
-                title={title}
-                url={url}
-                Icon={Icon}
-                showMenuBadge
-                menuBadgeLabel="0"
-              />
-            ))}
-          </SidebarMenu>
-        </SidebarGroupContent>
-      </SidebarGroup>
+      {hasFees && (
+        <SidebarGroup>
+          <SidebarGroupLabel>Gestión de Clientes</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {employeeRoutes.map(({ url, icon: Icon, title }) => {
+                const count =
+                  title === "Mensuales"
+                    ? clientsCount.monthlyClientsCount
+                    : clientsCount.hourlyClientsCount;
+
+                return (
+                  <RouteItem
+                    key={url}
+                    title={title}
+                    url={url}
+                    Icon={Icon}
+                    showMenuBadge
+                    menuBadgeLabel={count}
+                  />
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      )}
 
       <SidebarGroup className={cn(!isAdmin && "hidden")}>
         <SidebarGroupLabel>Administración</SidebarGroupLabel>

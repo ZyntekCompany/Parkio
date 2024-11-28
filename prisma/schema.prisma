@@ -30,8 +30,17 @@ enum ClientCategory {
 }
 
 model ParkingLot {
-  id   String @id @default(cuid())
-  name String
+  id           String        @id @default(cuid())
+  name         String        @unique // Nombre del parqueadero
+  pqrsEmail    String
+  users        User[] // Relación con usuarios (administradores y empleados)
+  clients      Client[]
+  clientTypes  ClientType[] // Relación con categorías de vehículos
+  vehicleTypes VehicleType[] // Relación con categorías de vehículos
+  fees         Fee[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model User {
@@ -43,6 +52,9 @@ model User {
   phone         String?
   image         String?
   role          UserRole  @default(Empleado)
+
+  parkingLotId String?
+  parkingLot   ParkingLot? @relation(fields: [parkingLotId], references: [id])
 
   accounts Account[]
 
@@ -75,10 +87,13 @@ model Account {
 model Client {
   id       String  @id @default(cuid())
   name     String? // Nombre, solo necesario para clientes mensuales
-  document String? @unique // Documento, solo relevante y único para clientes mensuales
+  document String? // Documento, solo relevante y único para clientes mensuales
   phone    String? // Teléfono, solo para clientes mensuales
-  plate    String  @unique // Matrícula del vehículo
+  plate    String // Matrícula del vehículo
   email    String?
+
+  parkingLotId String
+  parkingLot   ParkingLot @relation(fields: [parkingLotId], references: [id], onDelete: Cascade)
 
   clientTypeId String
   clientType   ClientType @relation(fields: [clientTypeId], references: [id])
@@ -89,14 +104,14 @@ model Client {
   clientCategory ClientCategory // Enum para definir si es por hora o mensual
 
   totalPaid Float   @default(0.0)
-  isActive  Boolean @default(true) // Este campo se usa para validar si los clientes por hora ya pagaron o si los clientes mensuales estan al dia
+  isActive  Boolean @default(true)
 
   // Campos específicos para clientes por hora
   entryDate DateTime? // Fecha de entrada, solo para clientes por hora
   exitDate  DateTime? // Fecha de salida, solo para clientes por hora
 
   // Campos específicos para clientes mensuales
-  startDate DateTime? // Fecha de inicio, solo para clientes mensuales
+  startDate DateTime? @default(now()) // Fecha de inicio, solo para clientes mensuales
   endDate   DateTime? // Fecha de finalización, solo para clientes mensuales
   // serviceExpirationTime DateTime? @default(dbgenerated("CURRENT_TIMESTAMP + INTERVAL '1 month'"))
 
@@ -107,7 +122,10 @@ model Client {
 // Modelo de Tipo de Cliente
 model ClientType {
   id   String @id @default(cuid())
-  name String @unique // Ejemplo: "Estudiante", "Particular"
+  name String // Ejemplo: "Estudiante", "Particular"
+
+  parkingLotId String
+  parkingLot   ParkingLot @relation(fields: [parkingLotId], references: [id], onDelete: Cascade)
 
   clients Client[] // Relación con clientes
   fees    Fee[] // Relación con tarifas
@@ -119,7 +137,10 @@ model ClientType {
 // Modelo de Tipo de Vehículo
 model VehicleType {
   id   String @id @default(cuid())
-  name String @unique // Ejemplo: "Automóvil", "Motocicleta", "Camioneta"
+  name String // Ejemplo: "Automóvil", "Motocicleta", "Camioneta"
+
+  parkingLotId String
+  parkingLot   ParkingLot @relation(fields: [parkingLotId], references: [id], onDelete: Cascade)
 
   clients Client[] // Relación con clientes
   fees    Fee[] // Relación con tarifas
@@ -131,6 +152,9 @@ model VehicleType {
 // Modelo de Tarifa
 model Fee {
   id String @id @default(cuid())
+
+  parkingLotId String
+  parkingLot   ParkingLot @relation(fields: [parkingLotId], references: [id], onDelete: Cascade)
 
   clientType   ClientType @relation(fields: [clientTypeId], references: [id], onDelete: Cascade)
   clientTypeId String

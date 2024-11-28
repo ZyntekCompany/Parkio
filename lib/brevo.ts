@@ -52,7 +52,7 @@ export async function monthlyPaymentEmail(
         body { font-family: 'Open Sans', Arial, sans-serif; background-color: #f7f7f7; margin: 0; padding: 0; color: #333; line-height: 1.6; }
         .container { width: 100%; max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
         .header { background-color: #003366; color: #ffffff; padding: 17px; border-top-left-radius: 8px; border-top-right-radius: 8px; }
-        .content { padding: 30px; }
+        .content { padding: 20px 15px; }
         h1 { margin: 0; font-size: 24px; font-weight: 600; }
         p { margin-bottom: 15px; font-size: 16px; color: #555; }
         .details { margin: 20px 0; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border: 1px solid #e0e0e0; }
@@ -89,7 +89,7 @@ export async function monthlyPaymentEmail(
 </body>
 </html>
   `;
-  smtpEmail.sender = { name: parkingName, email: "jamesrgal@gmail.com" };
+  smtpEmail.sender = { name: parkingName, email: "parkiosystem@gmail.com" };
 
   try {
     // Enviar el correo transaccional
@@ -110,7 +110,7 @@ export async function sendEmployeeCredentialsEmail(
     ? `https://${process.env.VERCEL_URL}`
     : process.env.HOST
     ? `https://${process.env.HOST}`
-    : 'http://localhost:3000'; // Fallback para desarrollo local
+    : "http://localhost:3000"; // Fallback para desarrollo local
 
   const loginUrl = `${baseUrl}/login`;
 
@@ -127,7 +127,7 @@ export async function sendEmployeeCredentialsEmail(
         body { font-family: 'Open Sans', Arial, sans-serif; background-color: #f7f7f7; margin: 0; padding: 0; color: #333; line-height: 1.6; }
         .container { width: 100%; max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
         .header { background-color: #003366; color: #ffffff; padding: 20px; border-top-left-radius: 8px; border-top-right-radius: 8px; }
-        .content { padding: 30px; }
+        .content { padding: 20px 15px; }
         h1 { margin: 0; font-size: 24px; font-weight: 600; }
         p { margin-bottom: 15px; font-size: 16px; color: #555; }
         .credentials-box { 
@@ -210,12 +210,78 @@ export async function sendEmployeeCredentialsEmail(
 </body>
 </html>
   `;
-  smtpEmail.sender = { name: parkingName, email: "jamesrgal@gmail.com" };
+  smtpEmail.sender = { name: parkingName, email: "parkiosystem@gmail.com" };
 
   try {
     // Enviar el correo transaccional
     await apiInstance.sendTransacEmail(smtpEmail);
   } catch (error) {
     console.error("Error sending email:", error);
+  }
+}
+
+export async function monthlyServiceConfirmationEmail(
+  email: string,
+  name: string,
+  password: string
+) {
+  const smtpEmail = {
+    subject: "Confirmación de Servicio - Parkio",
+    to: [{ email: email, name: name }],
+    htmlContent: `
+      <html lang="es">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Confirmación de Servicio</title>
+          <style>
+              @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+              body { font-family: 'Open Sans', Arial, sans-serif; background-color: #f7f7f7; margin: 0; padding: 0; color: #333; line-height: 1.6; }
+              .container { width: 100%; max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+              .header { background-color: #003366; color: #ffffff; padding: 17px; border-top-left-radius: 8px; border-top-right-radius: 8px; text-align: center; }
+              .content { padding: 20px 15px; }
+              h1 { margin: 0; font-size: 24px; font-weight: 600; }
+              p { margin-bottom: 15px; font-size: 16px; color: #555; }
+              .details { margin: 20px 0; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border: 1px solid #e0e0e0; }
+              .details p { margin: 10px 0; font-size: 15px; color: #444; }
+              .footer { text-align: center; margin-top: 30px; padding: 20px; font-size: 14px; color: #777; border-top: 1px solid #e0e0e0; }
+              .footer p { margin: 5px 0; }
+              .footer a { color: #003366; text-decoration: none; }
+              .logo { max-width: 150px; height: auto; margin-bottom: 15px; }
+          </style>
+      </head>
+      <body>
+          <div class="container">
+              <div class="header">
+                  <h1>¡Gracias por elegir Parkio!</h1>
+              </div>
+              <div class="content">
+                  <p>Estimado/a ${name},</p>
+                  <p>Estamos encantados de confirmar su suscripción al servicio de gestión de parqueadero. Agradecemos su preferencia por Parkio. A continuación, te compartimos los detalles de tu suscripción:</p>
+                  <div class="details">
+                      <p><strong>Correo de acceso:</strong> ${email}</p>
+                      <p><strong>Contraseña:</strong> ${password}</p>
+                  </div>
+                  <p>Te invitamos a acceder al sistema con las credenciales proporcionadas. Si necesitas asistencia, no dudes en contactarnos.  Nuestro equipo está listo para ayudarle.</p>
+              </div>
+              </div>
+              <div class="footer">
+                  <p>Atentamente,</p>
+                  <p><strong>Equipo Parkio</strong></p>
+                   <p>Teléfono: <a href="tel:+573223313923">+57 322 331 3923</a></p>
+                  <p>Correo: <a href="parkiosystem@gmail.com">parkiosystem@gmail.com</a></p>
+              </div>
+          </div>
+      </body>
+      </html>
+    `,
+    sender: { name: "Parkio", email: "parkiosystem@gmail.com" },
+  };
+
+  try {
+    // Enviar el correo
+    await apiInstance.sendTransacEmail(smtpEmail);
+  } catch (error) {
+    console.error("Error al enviar el correo:", error);
   }
 }

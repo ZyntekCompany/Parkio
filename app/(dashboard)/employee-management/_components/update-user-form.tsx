@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Loader2 } from "lucide-react";
+import { Loader } from "lucide-react";
 import { toast } from "sonner";
 
 import {
@@ -13,7 +13,6 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -197,9 +196,7 @@ export function UpdateUserForm({
               }
               className="w-full font-semibold"
             >
-              {isSubmitting && (
-                <Loader2 className="h-5 w-5 mr-3 animate-spin" />
-              )}
+              {isSubmitting && <Loader className="h-5 w-5 animate-spin" />}
               Guardar Cambios
             </Button>
           </div>
