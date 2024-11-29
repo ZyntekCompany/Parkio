@@ -1,8 +1,13 @@
 "use client";
 
+import * as z from "zod";
+import { toast } from "sonner";
+import { useTransition } from "react";
+import { Loader } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
+import { PhoneInput } from "react-international-phone";
+import "react-international-phone/style.css";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -22,13 +27,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { MonthlyClientColumns } from "./columns";
-import { toast } from "sonner";
-import { useTransition } from "react";
-import { Loader } from "lucide-react";
 import { MonthlyClientSchema } from "@/schemas/clients";
-import { PhoneInput } from "react-international-phone";
-import "react-international-phone/style.css";
-import { createMonthlyClient } from "@/actions/monthly-clients";
+import {
+  createMonthlyClient,
+  updateMonthlyClient,
+} from "@/actions/monthly-clients";
+import { PlateInput } from "@/components/ui/plate-input";
 
 type FormValues = z.infer<typeof MonthlyClientSchema>;
 
@@ -49,7 +53,7 @@ interface MonthlyClientRegistrationFormProps {
   closeDialog: () => void;
 }
 
-export function MonthlyClientRegistrationForm({
+export function MonthlyClientForm({
   initialData,
   clientTypes,
   vehicleTypes,
@@ -60,13 +64,13 @@ export function MonthlyClientRegistrationForm({
   const form = useForm<FormValues>({
     resolver: zodResolver(MonthlyClientSchema),
     defaultValues: {
-      name: "",
-      document: "",
-      phone: "",
-      plate: "",
-      email: "",
-      clientTypeId: "",
-      vehicleTypeId: "",
+      name: initialData?.name ?? "",
+      document: initialData?.document ?? "",
+      phone: initialData?.phone ?? "",
+      plate: initialData?.plate ?? "",
+      email: initialData?.email ?? "",
+      clientTypeId: initialData?.clientTypeId ?? "",
+      vehicleTypeId: initialData?.vehicleTypeId ?? "",
     },
   });
 
@@ -111,23 +115,24 @@ export function MonthlyClientRegistrationForm({
   function handleUpdateClient(values: z.infer<typeof MonthlyClientSchema>) {
     startTransition(async () => {
       try {
-        // const { error, success } = await updateFees(
-        //   values,
-        //   initialData?.hourlyFeeId!,
-        //   initialData?.monthlyFeeId!
-        // );
-        // if (error) {
-        //   toast.error("Error", {
-        //     description: error,
-        //   });
-        // }
-        // if (success) {
-        //   form.reset();
-        //   toast.success("Proceso exitoso.", {
-        //     description: success,
-        //   });
-        //   closeDialog();
-        // }
+        const { error, success } = await updateMonthlyClient(
+          values,
+          initialData?.id!
+        );
+
+        if (error) {
+          toast.error("Error", {
+            description: error,
+          });
+        }
+
+        if (success) {
+          form.reset();
+          toast.success("Proceso exitoso.", {
+            description: success,
+          });
+          closeDialog();
+        }
       } catch {
         toast.error("Ocurrió un problema con tu solicitud.");
       }
@@ -188,9 +193,31 @@ export function MonthlyClientRegistrationForm({
           name="plate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Matrícula del vehículo</FormLabel>
+              <FormLabel>Matrícula</FormLabel>
               <FormControl>
-                <Input placeholder="Matrícula" {...field} />
+                <PlateInput
+                  isSubmitting={isLoading}
+                  {...field}
+                  onChange={(e) => {
+                    let inputValue = e.target.value;
+
+                    // Eliminamos todo lo que no sea alfanumérico
+                    inputValue = inputValue.replace(/[^a-zA-Z0-9]/g, "");
+
+                    // Aplicamos la máscara
+                    if (inputValue.length <= 3) {
+                      inputValue = inputValue.toUpperCase(); // Solo letras
+                    } else if (inputValue.length <= 6) {
+                      inputValue = inputValue
+                        .toUpperCase()
+                        .replace(/(.{3})(.{0,3})/, "$1 $2"); // Añadimos el espacio
+                    } else {
+                      inputValue = inputValue.toUpperCase().slice(0, 7); // Limitar longitud
+                    }
+
+                    form.setValue("plate", inputValue);
+                  }}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -227,7 +254,6 @@ export function MonthlyClientRegistrationForm({
                       {clientType.name}
                     </SelectItem>
                   ))}
-                  {/* Añadir más tipos de cliente según sea necesario */}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -252,7 +278,6 @@ export function MonthlyClientRegistrationForm({
                       {vehicleType.name}
                     </SelectItem>
                   ))}
-                  {/* Añadir más tipos de vehículo según sea necesario */}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -262,7 +287,14 @@ export function MonthlyClientRegistrationForm({
 
         <Button
           variant="primary"
-          disabled={isLoading || !isValid || form.watch("phone").length < 13}
+          disabled={
+            isLoading ||
+            !isValid ||
+            form.watch("phone").length < 13 ||
+            !form.watch("clientTypeId") ||
+            !form.watch("vehicleTypeId") ||
+            form.watch("plate").length < 7
+          }
           className="w-full"
         >
           {isLoading && <Loader className="animate-spin" />}

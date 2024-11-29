@@ -6,6 +6,19 @@ import {
   UserCheck,
   UserCog,
 } from "lucide-react";
+import { MaskitoOptions } from "@maskito/core";
+
+export const PLATE_MASK_OPTS: MaskitoOptions = {
+  mask: [
+    /[A-Za-z0-9]/, // Primer carácter (cualquier letra o número)
+    /[A-Za-z0-9]/, // Segundo carácter
+    /[A-Za-z0-9]/, // Tercer carácter
+    " ", // Espacio
+    /[A-Za-z0-9]/, // Cuarto carácter
+    /[A-Za-z0-9]/, // Quinto carácter
+    /[A-Za-z0-9]/, // Sexto carácter
+  ],
+};
 
 export const employeeRoutes = [
   {

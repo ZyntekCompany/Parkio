@@ -9,7 +9,11 @@ import { UserRole } from "@prisma/client";
 import { UserColumns } from "@/app/(dashboard)/employee-management/_components/columns";
 import { getUserByEmail } from "../user";
 import { currentRole, currentUser } from "@/lib/auth-user";
-import { sendEmployeeCredentialsEmail } from "@/lib/brevo";
+import {
+  sendEmployeeCredentialsEmail,
+  sendPasswordChangeNotification,
+} from "@/lib/brevo";
+import { getCurrentParkingLot } from "../business-config";
 
 export async function createEmployee(
   credentials: z.infer<typeof CreateEmployeeSchema>
@@ -86,6 +90,7 @@ export async function updateUser(
 
   try {
     const loggedRole = await currentRole();
+    const loggedUser = await currentUser();
 
     const isAdmin = loggedRole === "Admin" || loggedRole === "SuperAdmin";
 
@@ -99,10 +104,12 @@ export async function updateUser(
       return { error: "El usuario no existe!" };
     }
 
+    const parkingLot = await getCurrentParkingLot();
+
     if (password) {
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      await db.user.update({
+      const updatedEmployee = await db.user.update({
         where: { id: userId },
         data: {
           name,
@@ -112,6 +119,12 @@ export async function updateUser(
           role: role as UserRole,
         },
       });
+
+      sendPasswordChangeNotification(
+        updatedEmployee.email!,
+        updatedEmployee.name!,
+        parkingLot?.name!
+      );
     } else {
       await db.user.update({
         where: { id: userId },

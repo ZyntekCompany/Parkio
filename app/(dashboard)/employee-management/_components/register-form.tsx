@@ -17,12 +17,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { PasswordInput } from "@/components/auth/password-input";
+// import { PasswordInput } from "@/components/auth/password-input";
 import { cn } from "@/lib/utils";
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 import { createEmployee } from "@/actions/employee-management";
 import { CreateEmployeeSchema } from "@/schemas/auth";
+import { PasswordInput } from "@/components/ui/password-input";
 
 interface RegisterFormProps {
   buttonLabel?: string;
@@ -136,21 +137,13 @@ export function RegisterForm({ buttonLabel, closeDialog }: RegisterFormProps) {
             control={form.control}
             render={({ field, fieldState }) => (
               <FormItem>
-                <FormLabel>Contraseña</FormLabel>
                 <FormControl>
                   <PasswordInput
-                    field={field}
+                    label="Contraseña"
                     isSubmitting={isSubmitting}
-                    className={cn(
-                      fieldState.invalid &&
-                        "focus-visible:ring-[#ef4444] border-[#ef4444]"
-                    )}
+                    {...field}
                   />
                 </FormControl>
-                <FormDescription className="text-[13.5px]">
-                  La contraseña debe tener un mínimo de 8 caracteres, incluyendo
-                  al menos 1 letra, 1 número y 1 carácter especial.
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -165,9 +158,7 @@ export function RegisterForm({ buttonLabel, closeDialog }: RegisterFormProps) {
               }
               className="w-full font-semibold"
             >
-              {isSubmitting && (
-                <Loader className="h-5 w-5 animate-spin" />
-              )}
+              {isSubmitting && <Loader className="h-5 w-5 animate-spin" />}
               {buttonLabel ? buttonLabel : "Registrarse"}
             </Button>
           </div>

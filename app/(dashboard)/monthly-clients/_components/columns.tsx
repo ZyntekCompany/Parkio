@@ -3,6 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 
 import { Badge } from "@/components/ui/badge";
+import { CellAction } from "./cell-actions";
 
 export type MonthlyClientColumns = {
   id: string;
@@ -141,7 +142,7 @@ export const columns: ColumnDef<MonthlyClientColumns>[] = [
     id: "actions",
     cell: ({ row }) => (
       <div className="text-end min-w-[80px]">
-        {/* <CellAction data={row.original} /> */}
+        <CellAction data={row.original} />
       </div>
     ),
   },

@@ -67,11 +67,11 @@ export async function createMonthlyClient(
     const { name, email, phone, document, plate, vehicleTypeId, clientTypeId } =
       result.data;
 
-    const existingClient = await db.client.findFirst({
+    const existingClient = await db.client.findMany({
       where: { plate, isActive: true },
     });
 
-    if (existingClient) {
+    if (existingClient.length > 0) {
       return {
         error: `El vehículo con plata ${plate}, ya se encuentra registrado.`,
       };
@@ -141,6 +141,7 @@ export async function createMonthlyClient(
     revalidatePath("/monthly-clients");
     return { success: "Cliente creado." };
   } catch (error) {
+    console.log(error)
     return { error: "Algo salió mal en el proceso." };
   }
 }
@@ -237,8 +238,6 @@ export async function updateMonthlyClient(
         totalPaid: fee.price,
       },
     });
-
-    // TODO: Si se actualiza el tipo de cliente o vehiculo entonces enviar el correo de cambio de tarifa
 
     revalidatePath("/");
     revalidatePath("/monthly-clients");

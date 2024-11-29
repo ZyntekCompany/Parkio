@@ -4,7 +4,7 @@ import { Modal } from "@/components/common/modal";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
-import { MonthlyClientRegistrationForm } from "./monthly-client-form";
+import { MonthlyClientForm } from "./monthly-client-form";
 import { getClientTypes, getVehicleTypes } from "@/actions/business-config";
 
 export function CreateClientTrigger() {
@@ -43,7 +43,7 @@ export function CreateClientTrigger() {
         onClose={closeDialog}
         className="max-h-[500px] h-full"
       >
-        <MonthlyClientRegistrationForm
+        <MonthlyClientForm
           vehicleTypes={vehicleTypes}
           clientTypes={clientTypes}
           closeDialog={closeDialog}
