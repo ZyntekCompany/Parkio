@@ -1,7 +1,3 @@
-import { format } from "date-fns";
-import { es } from "date-fns/locale";
-
-import { getVehicleTypes } from "@/actions/business-config";
 import {
   Card,
   CardContent,
@@ -9,21 +5,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { columns, VehicleTypeColumns } from "./columns";
-import { DataTable } from "@/components/common/data-table";
+
 import { AddVehicleTrigger } from "./add-vehicle-trigger";
+import { Suspense } from "react";
+import { VehicleTypeTable } from "./vehicle-type-table";
+import { TableCardSkeleton } from "@/components/skeletons/table-card-skeleton";
+import { vehicleAndClientsTypeColumns } from "@/constants";
 
-export async function VehicleTypeConfig() {
-  const vehicleTypes = await getVehicleTypes();
-
-  const formattedVehicleTypes: VehicleTypeColumns[] = vehicleTypes.map(
-    (vehicleType) => ({
-      id: vehicleType.id,
-      name: vehicleType.name,
-      createdAt: format(vehicleType.createdAt, "dd/MM, yyyy", { locale: es }),
-    })
-  );
-
+export function VehicleTypeConfig() {
   return (
     <Card className="max-xs:p-0 dark:bg-muted/20 bg-muted-foreground/5 space-y-0">
       <CardHeader className="flex md:flex-row justify-between md:items-center gap-3 max-sm:px-4">
@@ -36,12 +25,17 @@ export async function VehicleTypeConfig() {
         <AddVehicleTrigger />
       </CardHeader>
       <CardContent className="max-sm:px-4">
-        <DataTable
-          searchKey="name"
-          searchPlaceholder="Filtra por nombre..."
-          columns={columns}
-          data={formattedVehicleTypes}
-        />
+        <Suspense
+          fallback={
+            <TableCardSkeleton
+              rowCount={2}
+              inputPlaceholder="Buscar por nombre..."
+              columns={vehicleAndClientsTypeColumns}
+            />
+          }
+        >
+          <VehicleTypeTable />
+        </Suspense>
       </CardContent>
     </Card>
   );

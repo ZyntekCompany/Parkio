@@ -49,7 +49,7 @@ export const columns: ColumnDef<MonthlyClientColumns>[] = [
   },
   {
     accessorKey: "document",
-    header: () => <div className="min-w-[100px]">N° Document</div>,
+    header: () => <div className="min-w-[100px]">N° Documento</div>,
     cell: ({ row }) => {
       const document: string = row.getValue("document");
 

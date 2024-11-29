@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   description: "Sistema gestión de parqueaderos.",
   manifest: "/manifest.json",
   icons: { apple: "/icon.png" },
-  themeColor: "#000",
+  themeColor: "#18181b",
 };
 
 export default async function RootLayout({
@@ -30,8 +30,8 @@ export default async function RootLayout({
         <SessionProvider session={session}>
           <ThemeProvider
             attribute="class"
-            defaultTheme="system"
-            enableSystem
+            defaultTheme="dark"
+            enableSystem={false}
             disableTransitionOnChange
           >
             {children}

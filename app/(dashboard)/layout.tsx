@@ -14,11 +14,14 @@ export default function DashboardLayout({
   const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";
 
   return (
-    <SidebarProvider defaultOpen={defaultOpen} className="h-full overflow-hidden">
+    <SidebarProvider
+      defaultOpen={defaultOpen}
+      className="h-full overflow-hidden"
+    >
       <AppSidebar />
       <SidebarInset className="overflow-hidden">
         <MainHeader />
-        <main className="p-4 overflow-y-auto">{children}</main>
+        <main className="p-4 overflow-y-auto h-full">{children}</main>
       </SidebarInset>
     </SidebarProvider>
   );

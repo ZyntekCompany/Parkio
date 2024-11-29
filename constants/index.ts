@@ -6,19 +6,51 @@ import {
   UserCheck,
   UserCog,
 } from "lucide-react";
-import { MaskitoOptions } from "@maskito/core";
 
-export const PLATE_MASK_OPTS: MaskitoOptions = {
-  mask: [
-    /[A-Za-z0-9]/, // Primer carácter (cualquier letra o número)
-    /[A-Za-z0-9]/, // Segundo carácter
-    /[A-Za-z0-9]/, // Tercer carácter
-    " ", // Espacio
-    /[A-Za-z0-9]/, // Cuarto carácter
-    /[A-Za-z0-9]/, // Quinto carácter
-    /[A-Za-z0-9]/, // Sexto carácter
-  ],
-};
+export const employeeManagementColumns: {
+  key: string;
+  label: string;
+}[] = [
+  { key: "imagen", label: "Imagen" },
+  { key: "nombre", label: "Nombre" },
+  { key: "correo", label: "Correo" },
+  { key: "telefono", label: "Teléfono" },
+  { key: "role", label: "Rol" },
+  { key: "fechaInicio", label: "Fecha de Inicio" },
+];
+
+export const feeConfigColumns: {
+  key: string;
+  label: string;
+}[] = [
+  { key: "tipoVehículo", label: "Tipo de Vehículo" },
+  { key: "tipoCliente", label: "Tipo de Cliente" },
+  { key: "tarifaHora", label: "Tarifa por Hora" },
+  { key: "tarifaMes", label: "Tarifa por Mes" },
+];
+
+export const vehicleAndClientsTypeColumns: {
+  key: string;
+  label: string;
+}[] = [
+  { key: "nombre", label: "Nombre" },
+  { key: "creado", label: "Creado" },
+];
+
+export const monthlyClientsColumns: {
+  key: string;
+  label: string;
+}[] = [
+  { key: "nombre", label: "Nombre" },
+  { key: "correo", label: "Correo" },
+  { key: "documento", label: "N° Documento" },
+  { key: "telefono", label: "Teléfono" },
+  { key: "placa", label: "Placa" },
+  { key: "tipoVehiculo", label: "Tipo de Vehículo" },
+  { key: "tipoCliente", label: "Tipo de Cliente" },
+  { key: "fechaInicio", label: "Fecha de Inicio" },
+  { key: "fechaEXpiración", label: "Fecha de Expiración" },
+];
 
 export const employeeRoutes = [
   {

@@ -10,6 +10,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { cn } from "@/lib/utils";
 
 interface SidebarRouteItemProps {
   title: string;
@@ -46,7 +47,7 @@ export function RouteItem({
           <span>{title}</span>
         </Link>
       </SidebarMenuButton>
-      {showMenuBadge && <SidebarMenuBadge>{menuBadgeLabel}</SidebarMenuBadge>}
+      {showMenuBadge && <SidebarMenuBadge><span className={cn(isActive && "text-white dark:text-white")}>{menuBadgeLabel}</span></SidebarMenuBadge>}
     </SidebarMenuItem>
   );
 }

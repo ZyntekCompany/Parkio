@@ -1,4 +1,3 @@
-import { getClientTypes, getFees } from "@/actions/business-config";
 import {
   Card,
   CardContent,
@@ -6,28 +5,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { columns, FeeColumns } from "./columns";
-import { DataTable } from "@/components/common/data-table";
+
 import { AddFeeTrigger } from "./add-fee-trigger";
+import { Suspense } from "react";
+import { FeeConfigTable } from "./fee-config-table";
+import { TableCardSkeleton } from "@/components/skeletons/table-card-skeleton";
+import { feeConfigColumns } from "@/constants";
 
-export async function FeeConfig() {
-  const fees = await getFees();
-  const clientTypes = await getClientTypes();
-
-  const formattedClientTypes = clientTypes.map((clientType) => clientType.name);
-  const filters = [...formattedClientTypes, "Todos"];
-
-  const formattedFees: FeeColumns[] = fees.map((fee) => ({
-    monthlyFeeId: fee.monthlyFeeId!,
-    hourlyFeeId: fee.hourlyFeeId!,
-    vehicleTypeId: fee.vehicleTypeId,
-    clientTypeId: fee.clientTypeId,
-    vehicleType: fee.vehicleType,
-    clientType: fee.clientType,
-    hourlyFee: fee.hourlyFee!,
-    monthlyFee: fee.monthlyFee!,
-  }));
-
+export function FeeConfig() {
   return (
     <Card className="max-xs:p-0 border-none dark:bg-muted/20 bg-muted-foreground/5 space-y-0">
       <CardHeader className="flex md:flex-row justify-between md:items-center gap-3 max-sm:px-4">
@@ -40,16 +25,16 @@ export async function FeeConfig() {
         <AddFeeTrigger />
       </CardHeader>
       <CardContent className="max-sm:px-4">
-        <DataTable
-          searchKey="vehicleType"
-          searchPlaceholder="Filtra por vehículo..."
-          columns={columns}
-          data={formattedFees}
-          showFilterSelect
-          filterColumnName="clientType"
-          filterDefault="Todos"
-          filters={filters}
-        />
+        <Suspense
+          fallback={
+            <TableCardSkeleton
+              columns={feeConfigColumns}
+              inputPlaceholder="Buscar por vehículo..."
+            />
+          }
+        >
+          <FeeConfigTable />
+        </Suspense>
       </CardContent>
     </Card>
   );
