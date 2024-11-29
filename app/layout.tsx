@@ -10,8 +10,11 @@ import { SessionProvider } from "next-auth/react";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Parking NoA",
-  description: "Sistema gestor de de parqueadero.",
+  title: "Parkio",
+  description: "Sistema gestión de parqueaderos.",
+  manifest: "/manifest.json",
+  icons: { apple: "/icon.png" },
+  themeColor: "#000",
 };
 
 export default async function RootLayout({
