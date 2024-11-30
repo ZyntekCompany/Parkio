@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-// import { PasswordInput } from "@/components/auth/password-input";
 import { UpdateSchema } from "@/schemas/auth";
 import { cn } from "@/lib/utils";
 import { PhoneInput } from "react-international-phone";
@@ -172,16 +171,7 @@ export function UpdateUserForm({
             control={form.control}
             render={({ field, fieldState }) => (
               <FormItem>
-                {/* <FormLabel>Contraseña</FormLabel> */}
                 <FormControl>
-                  {/* <PasswordInput
-                    field={field}
-                    isSubmitting={isSubmitting}
-                    className={cn(
-                      fieldState.invalid &&
-                        "focus-visible:ring-[#ef4444] border-[#ef4444]"
-                    )}
-                  /> */}
                   <PasswordInput
                     label="Contraseña"
                     isSubmitting={isSubmitting}
@@ -203,7 +193,7 @@ export function UpdateUserForm({
               className="w-full font-semibold"
             >
               {isSubmitting && <Loader className="h-5 w-5 animate-spin" />}
-              Guardar Cambios
+              Guardar cambios
             </Button>
           </div>
         </div>

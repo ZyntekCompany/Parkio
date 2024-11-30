@@ -4,7 +4,10 @@ import { currentRole, currentUser } from "@/lib/auth-user";
 import { db } from "@/lib/db";
 import { MonthlyClientSchema } from "@/schemas/clients";
 import { z } from "zod";
-import { monthlyPaymentEmail } from "@/lib/brevo";
+import {
+  monthlyPaymentEmail,
+  monthlyReservationUpdateEmail,
+} from "@/lib/brevo";
 import { revalidatePath } from "next/cache";
 import { DateTime } from "luxon";
 
@@ -27,6 +30,7 @@ export async function getMonthlyClients() {
         plate: true,
         createdAt: true,
         endDate: true,
+        monthsReserved: true,
         vehicleType: {
           select: {
             id: true,
@@ -40,6 +44,9 @@ export async function getMonthlyClients() {
           },
         },
       },
+      orderBy: {
+        createdAt: "desc"
+      }
     });
 
     return clients;
@@ -64,8 +71,16 @@ export async function createMonthlyClient(
       return { error: "Proceso no autorizado." };
     }
 
-    const { name, email, phone, document, plate, vehicleTypeId, clientTypeId } =
-      result.data;
+    const {
+      name,
+      email,
+      phone,
+      document,
+      plate,
+      monthsReserved,
+      vehicleTypeId,
+      clientTypeId,
+    } = result.data;
 
     const existingClient = await db.client.findMany({
       where: { plate, isActive: true },
@@ -100,8 +115,11 @@ export async function createMonthlyClient(
     const currentDate = DateTime.now().setZone("America/Bogota");
     const startDate = currentDate.toJSDate();
 
-    // Calcula la fecha de finalización sumando un mes
-    const endDate = currentDate.plus({ months: 1 }).toJSDate();
+    // Calcula la fecha de finalización sumando la cantidad de meses reservados
+    const endDate = currentDate.plus({ months: monthsReserved }).toJSDate();
+
+    // Calcula el total a pagar de acuerdo a la cantidad de meses reservados
+    const totalCalculatedPaid = fee.price * monthsReserved;
 
     // Crea el cliente mensual en la base de datos
     const newClient = await db.client.create({
@@ -113,10 +131,11 @@ export async function createMonthlyClient(
         email,
         clientTypeId,
         vehicleTypeId,
+        monthsReserved,
         clientCategory: "MONTHLY",
         startDate,
         endDate,
-        totalPaid: fee?.price || 0,
+        totalPaid: totalCalculatedPaid || 0,
         parkingLotId: loggedUser.parkingLotId!,
       },
       include: {
@@ -141,7 +160,7 @@ export async function createMonthlyClient(
     revalidatePath("/monthly-clients");
     return { success: "Cliente creado." };
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return { error: "Algo salió mal en el proceso." };
   }
 }
@@ -176,7 +195,10 @@ export async function deleteMonthlyClient(id: string) {
 
 export async function updateMonthlyClient(
   values: z.infer<typeof MonthlyClientSchema>,
-  clientId: string
+  clientId: string,
+  previousMonthsReserved: number,
+  previousClientTypeId: string,
+  previousVehicleTypeId: string
 ) {
   const result = MonthlyClientSchema.safeParse(values);
 
@@ -199,8 +221,16 @@ export async function updateMonthlyClient(
       return { error: "El cliente que quieres actualizar no existe." };
     }
 
-    const { name, email, phone, document, plate, vehicleTypeId, clientTypeId } =
-      result.data;
+    const {
+      name,
+      email,
+      phone,
+      document,
+      plate,
+      monthsReserved,
+      vehicleTypeId,
+      clientTypeId,
+    } = result.data;
 
     const fee = await db.fee.findFirst({
       where: {
@@ -221,8 +251,23 @@ export async function updateMonthlyClient(
       };
     }
 
-    // Crea el cliente mensual en la base de datos
-    await db.client.update({
+    // Fecha de creacion
+    // const createdAtLuxon = DateTime.fromJSDate(existingMonthlyClient.createdAt).setZone("America/Bogota");
+    const createdAtLuxon = DateTime.fromJSDate(existingMonthlyClient.createdAt)
+      .setZone("America/Bogota")
+      .startOf("day");
+
+    // Calcula la fecha de finalización sumando la cantidad de meses reservados
+    // const endDate = createdAtLuxon.plus({ months: monthsReserved }).toJSDate();
+    const endDate = createdAtLuxon
+      .plus({ months: monthsReserved })
+      .toJSDate();
+
+    // Calcula el total a pagar de acuerdo a la cantidad de meses reservados
+    const totalCalculatedPaid = fee.price * monthsReserved;
+
+    // Actualizar al cliente mensual en la base de datos
+    const updatedClient = await db.client.update({
       where: {
         id: clientId,
         isActive: true,
@@ -235,9 +280,29 @@ export async function updateMonthlyClient(
         email,
         clientTypeId,
         vehicleTypeId,
-        totalPaid: fee.price,
+        endDate,
+        monthsReserved,
+        totalPaid: totalCalculatedPaid,
+      },
+      include: {
+        parkingLot: true,
       },
     });
+
+    if (
+      monthsReserved !== previousMonthsReserved ||
+      previousClientTypeId !== clientTypeId ||
+      previousVehicleTypeId !== vehicleTypeId
+    ) {
+      monthlyReservationUpdateEmail(
+        updatedClient.email!,
+        updatedClient.name!,
+        updatedClient.startDate!,
+        updatedClient.endDate!,
+        updatedClient.totalPaid!,
+        updatedClient.parkingLot.name
+      );
+    }
 
     revalidatePath("/");
     revalidatePath("/monthly-clients");

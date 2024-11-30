@@ -135,12 +135,12 @@ export function DailyEarningsChart({
             value={hourlyClientsStillInParking ?? 0}
           />
           <DailyStatisticsCard
-            title="Hora de Mayor Ingresos"
-            subtitle="Últimas 20 horas"
+            title="Promedio Diario"
+            subtitle="Últimas 24 horas"
             value={formatToCOP(totalEarnings / 20)}
           />
           <DailyStatisticsCard
-            title="Promedio Diario"
+            title="Hora de Mayor Ingresos"
             subtitle="Mayor Ingresos"
             value={
               chartData.reduce((max, entry) =>

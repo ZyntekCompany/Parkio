@@ -51,7 +51,7 @@ export function CreateClientTrigger() {
       </Modal>
       <Button variant="primary" onClick={() => setOpen(true)}>
         <Plus />
-        Nuevo Cliente
+        Nuevo cliente
       </Button>
     </>
   );

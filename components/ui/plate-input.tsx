@@ -17,7 +17,7 @@ const PlateInput = React.forwardRef<HTMLInputElement, PlateInputProps>(
           disabled={isSubmitting}
           maxLength={7}
           style={{ textTransform: "uppercase" }}
-          placeholder="*** ***"
+          placeholder="--- ---"
           className={className}
           {...props}
           ref={ref}

@@ -17,6 +17,7 @@ export const MonthlyClientSchema = z.object({
   plate: z.string().min(6, {
     message: "La matrícula debe tener al menos 6 caracteres.",
   }),
+  monthsReserved: z.number().default(1),
   email: z.string().email({
     message: "Debe ser un email válido.",
   }),

@@ -99,6 +99,78 @@ export async function monthlyPaymentEmail(
   }
 }
 
+export async function monthlyReservationUpdateEmail(
+  email: string,
+  name: string,
+  startDate: Date,
+  endDate: Date,
+  totalPaid: number,
+  parkingName: string
+) {
+  const formattedStartDate = formatColombianDate(startDate);
+  const formattedEndDate = formatColombianDate(endDate);
+  const formattedTotalPaid = formatToCOP(totalPaid);
+
+  smtpEmail.subject = "Actualización en tu Reserva Mensual";
+  smtpEmail.to = [{ email: email, name: name }];
+  smtpEmail.htmlContent = `
+   <html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualización de Reserva Mensual</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+        body { font-family: 'Open Sans', Arial, sans-serif; background-color: #f7f7f7; margin: 0; padding: 0; color: #333; line-height: 1.6; }
+        .container { width: 100%; max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .header { background-color: #003366; color: #ffffff; padding: 17px; border-top-left-radius: 8px; border-top-right-radius: 8px; }
+        .content { padding: 20px 15px; }
+        h1 { margin: 0; font-size: 24px; font-weight: 600; }
+        p { margin-bottom: 15px; font-size: 16px; color: #555; }
+        .details { margin: 20px 0; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border: 1px solid #e0e0e0; }
+        .details p { margin: 10px 0; font-size: 15px; color: #444; }
+        .footer { text-align: center; margin-top: 30px; padding: 20px; font-size: 14px; color: #777; border-top: 1px solid #e0e0e0; }
+        .footer p { margin: 5px 0; }
+        .footer a { color: #003366; text-decoration: none; }
+        .logo { max-width: 150px; height: auto; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Actualización de Reserva Mensual</h1>
+        </div>
+        <div class="content">
+            <p>Estimado/a ${name},</p>
+            <p>Queremos informarte sobre una actualización en los detalles de tu reserva mensual en ${parkingName}. A continuación, te compartimos los nuevos detalles:</p>
+
+            <div class="details">
+                <p><strong>Cliente:</strong> ${name}</p>
+                <p><strong>Período de Servicio:</strong> ${formattedStartDate} - ${formattedEndDate}</p>
+                <p><strong>Monto Total Pagado:</strong> ${formattedTotalPaid}</p>
+            </div>
+
+            <p>Si tienes preguntas o necesitas más información, no dudes en contactarnos. Estamos aquí para ayudarte.</p>
+
+            <div class="footer">
+                <p>Atentamente,</p>
+                <p><strong>Equipo de ${parkingName}</strong></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+  `;
+  smtpEmail.sender = { name: parkingName, email: "parkiosystem@gmail.com" };
+
+  try {
+    // Enviar el correo transaccional
+    await apiInstance.sendTransacEmail(smtpEmail);
+  } catch (error) {
+    console.error("Error sending email:", error);
+  }
+}
+
 export async function sendEmployeeCredentialsEmail(
   email: string,
   name: string,

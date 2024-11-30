@@ -1,5 +1,5 @@
 import React from "react";
-import { format } from "date-fns";
+import { differenceInDays, format } from "date-fns";
 import { es } from "date-fns/locale";
 
 import { columns, MonthlyClientColumns } from "./columns";
@@ -9,20 +9,28 @@ import { DataTable } from "@/components/common/data-table";
 export async function MonthlyClientsTable() {
   const clients = await getMonthlyClients();
 
-  const formattedClients: MonthlyClientColumns[] = clients.map((client) => ({
-    id: client.id,
-    clientTypeId: client.clientType.id,
-    vehicleTypeId: client.vehicleType.id,
-    name: client.name!,
-    email: client.email!,
-    document: client.document!,
-    phone: client.phone!,
-    plate: client.plate,
-    vehicleType: client.vehicleType.name,
-    clientType: client.clientType.name,
-    endDate: format(client.endDate!, "d 'de' MMMM, yyyy", { locale: es }),
-    createdAt: format(client.createdAt, "d 'de' MMMM, yyyy", { locale: es }),
-  }));
+  const formattedClients: MonthlyClientColumns[] = clients.map((client) => {
+    const createdAt = new Date(client.createdAt);
+    const endDate = new Date(client.endDate!);
+
+    return {
+      id: client.id,
+      clientTypeId: client.clientType.id,
+      vehicleTypeId: client.vehicleType.id,
+      monthsReserved: client.monthsReserved!,
+      name: client.name!,
+      email: client.email!,
+      document: client.document!,
+      phone: client.phone!,
+      plate: client.plate,
+      vehicleType: client.vehicleType.name,
+      clientType: client.clientType.name,
+      createdAt: format(createdAt, "d 'de' MMMM, yyyy", { locale: es }),
+      endDate: format(endDate, "d 'de' MMMM, yyyy", { locale: es }),
+      serviceDays: differenceInDays(endDate, createdAt),
+    };
+  });
+
   return (
     <DataTable
       searchKey="plate"

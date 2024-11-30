@@ -33,6 +33,7 @@ import {
   updateMonthlyClient,
 } from "@/actions/monthly-clients";
 import { PlateInput } from "@/components/ui/plate-input";
+import { StepNumberInput } from "@/components/ui/step-number-input";
 
 type FormValues = z.infer<typeof MonthlyClientSchema>;
 
@@ -68,6 +69,7 @@ export function MonthlyClientForm({
       document: initialData?.document ?? "",
       phone: initialData?.phone ?? "",
       plate: initialData?.plate ?? "",
+      monthsReserved: initialData?.monthsReserved ?? 1,
       email: initialData?.email ?? "",
       clientTypeId: initialData?.clientTypeId ?? "",
       vehicleTypeId: initialData?.vehicleTypeId ?? "",
@@ -117,7 +119,10 @@ export function MonthlyClientForm({
       try {
         const { error, success } = await updateMonthlyClient(
           values,
-          initialData?.id!
+          initialData?.id!,
+          initialData?.monthsReserved!,
+          initialData?.clientTypeId!,
+          initialData?.vehicleTypeId!
         );
 
         if (error) {
@@ -190,6 +195,19 @@ export function MonthlyClientForm({
         />
         <FormField
           control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input placeholder="email@ejemplo.com" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
           name="plate"
           render={({ field }) => (
             <FormItem>
@@ -225,12 +243,18 @@ export function MonthlyClientForm({
         />
         <FormField
           control={form.control}
-          name="email"
+          name="monthsReserved"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="email@ejemplo.com" {...field} />
+                <StepNumberInput
+                  label="Meses a reservar"
+                  isSubmitting={isLoading}
+                  minValue={1}
+                  defaultValue={1}
+                  value={field.value}
+                  onChange={(value) => field.onChange(value)}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -298,7 +322,7 @@ export function MonthlyClientForm({
           className="w-full"
         >
           {isLoading && <Loader className="animate-spin" />}
-          Registrar Cliente
+          {!initialData ? "Crear cliente" : "Guardar cambios"}
         </Button>
       </form>
     </Form>

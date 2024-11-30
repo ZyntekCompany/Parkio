@@ -27,7 +27,7 @@ export function CreateEmployeeTrigger() {
       </Modal>
       <Button variant="primary" onClick={() => setOpen(true)}>
         <Plus />
-        Nuevo Empleado
+        Nuevo empleado
       </Button>
     </>
   );
