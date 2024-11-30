@@ -12,6 +12,7 @@ export async function MonthlyClientsTable() {
   const formattedClients: MonthlyClientColumns[] = clients.map((client) => {
     const createdAt = new Date(client.createdAt);
     const endDate = new Date(client.endDate!);
+    const today = new Date()
 
     return {
       id: client.id,
@@ -27,7 +28,7 @@ export async function MonthlyClientsTable() {
       clientType: client.clientType.name,
       createdAt: format(createdAt, "d 'de' MMMM, yyyy", { locale: es }),
       endDate: format(endDate, "d 'de' MMMM, yyyy", { locale: es }),
-      serviceDays: differenceInDays(endDate, createdAt),
+      serviceDays: differenceInDays(endDate, today),
     };
   });
 

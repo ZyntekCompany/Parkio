@@ -92,6 +92,7 @@ model Client {
   plate          String // Matrícula del vehículo
   email          String?
   monthsReserved Int? // Solo para los usuarios mensuales
+  reminderSent Boolean? @default(false)
 
   parkingLotId String
   parkingLot   ParkingLot @relation(fields: [parkingLotId], references: [id], onDelete: Cascade)

@@ -1,20 +1,10 @@
+import { formatColombianDate } from "@/utils/format-colombian-date";
 import { formatToCOP } from "@/utils/format-to-cop";
 import {
   TransactionalEmailsApi,
   SendSmtpEmail,
   TransactionalEmailsApiApiKeys,
 } from "@getbrevo/brevo";
-import { DateTime } from "luxon";
-
-// Función para formatear la fecha en español en la zona horaria de Colombia
-function formatColombianDate(date: Date): string {
-  const timeZone = "America/Bogota"; // Zona horaria de Colombia
-  // Crear un objeto DateTime y ajustarlo a la zona horaria de Colombia
-  const zonedDate = DateTime.fromJSDate(date).setZone(timeZone);
-
-  // Formatear la fecha en el formato deseado
-  return zonedDate.toFormat("d 'de' MMMM, yyyy, h:mm a", { locale: "es" });
-}
 
 // Instanciar API de correos
 const apiInstance = new TransactionalEmailsApi();

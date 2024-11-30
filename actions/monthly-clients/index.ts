@@ -10,6 +10,38 @@ import {
 } from "@/lib/brevo";
 import { revalidatePath } from "next/cache";
 import { DateTime } from "luxon";
+import { getCurrentParkingLot } from "../business-config";
+
+export async function getLatestInactiveMonthlyClient(query: string) {
+  try {
+    const parkingLot = await getCurrentParkingLot();
+
+    const lowerCaseQuery = query.trim().toLowerCase();
+
+    const latestClient = await db.client.findFirst({
+      where: {
+        parkingLotId: parkingLot?.id,
+        clientCategory: "MONTHLY",
+        isActive: false,
+        OR: [
+          { document: { equals: lowerCaseQuery, mode: "insensitive" } }, // Coincidencia insensible a mayúsculas
+          { plate: { equals: lowerCaseQuery, mode: "insensitive" } }, // Coincidencia insensible a mayúsculas
+        ],
+      },
+      include: {
+        vehicleType: true,
+        clientType: true,
+      },
+      orderBy: {
+        endDate: "desc", // Se ordena por la fecha de finalización más reciente
+      },
+    });
+
+    return latestClient;
+  } catch {
+    return null;
+  }
+}
 
 export async function getMonthlyClients() {
   try {
@@ -45,8 +77,8 @@ export async function getMonthlyClients() {
         },
       },
       orderBy: {
-        createdAt: "desc"
-      }
+        createdAt: "desc",
+      },
     });
 
     return clients;
@@ -259,9 +291,7 @@ export async function updateMonthlyClient(
 
     // Calcula la fecha de finalización sumando la cantidad de meses reservados
     // const endDate = createdAtLuxon.plus({ months: monthsReserved }).toJSDate();
-    const endDate = createdAtLuxon
-      .plus({ months: monthsReserved })
-      .toJSDate();
+    const endDate = createdAtLuxon.plus({ months: monthsReserved }).toJSDate();
 
     // Calcula el total a pagar de acuerdo a la cantidad de meses reservados
     const totalCalculatedPaid = fee.price * monthsReserved;

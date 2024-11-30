@@ -92,7 +92,7 @@ export function DataTable<TData, TValue>({
           onChange={(event) =>
             table.getColumn(searchKey)?.setFilterValue(event.target.value)
           }
-          className={cn("md-plus:max-w-sm bg-transparent", inputClassName)}
+          className={cn("md-plus:max-w-sm", inputClassName)}
         />
         <div className="flex md:items-center sm:justify-end gap-3 w-full">
           {showVisibility && (
@@ -143,7 +143,7 @@ export function DataTable<TData, TValue>({
             >
               <SelectTrigger
                 className={cn(
-                  "sm:w-[180px] h-12 w-full bg-transparent",
+                  "sm:w-[180px] h-12 w-full",
                   !showFilterSelect && "hidden",
                   inputClassName
                 )}
@@ -164,7 +164,7 @@ export function DataTable<TData, TValue>({
           )}
         </div>
       </div>
-      <div className={cn("rounded-md border", tableClassName)}>
+      <div className={cn("rounded-md border bg-background", tableClassName)}>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
