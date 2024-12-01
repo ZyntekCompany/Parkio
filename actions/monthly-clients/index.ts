@@ -89,9 +89,11 @@ export async function getMonthlyClients() {
 }
 
 export async function checkAndSendReminders() {
-  const now = new Date();
-  const fiveDaysFromNow = new Date();
-  fiveDaysFromNow.setDate(now.getDate() + 5);
+  const now = DateTime.now().setZone("America/Bogota").toJSDate();
+  const fiveDaysFromNow = DateTime.now()
+    .setZone("America/Bogota")
+    .plus({ days: 5 })
+    .toJSDate();
 
   try {
     const clients = await db.client.findMany({
