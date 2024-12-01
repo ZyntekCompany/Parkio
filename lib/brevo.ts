@@ -443,6 +443,7 @@ export async function monthlyServiceExpirationReminderEmail(
   remainingDays: number,
   parkingName: string
 ) {
+  console.log("Envio de correo ejecutado.")
   const formattedExpirationDate = expirationDate.toLocaleDateString("es-CO", {
     day: "numeric",
     month: "long",
