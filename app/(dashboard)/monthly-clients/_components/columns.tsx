@@ -147,15 +147,16 @@ export const columns: ColumnDef<MonthlyClientColumns>[] = [
     cell: ({ row }) => {
       const serviceDays: number = row.getValue("serviceDays");
 
+      console.log(serviceDays <= 5);
+
       return (
         <div className="flex items-center gap-2 min-w-[100px] py-4">
           <Badge
             className={cn(
               "bg-green-400/50 dark:bg-green-400/20 text-green-800 dark:text-green-400 hover:bg-green-400/25 border-green-400 py-[6px]",
-              serviceDays <= 5 &&
-                "bg-red-400/50 dark:bg-red-400/20 text-red-800 dark:text-red-400 border-red-400 hover:bg-red-400/25",
-              serviceDays <= 15 &&
-                "bg-amber-400/50 dark:bg-amber-400/20 hover:bg-amber-400/25 text-amber-800 dark:text-amber-400 border-amber-400"
+              serviceDays <= 5
+                ? "bg-red-400/50 dark:bg-red-400/20 text-red-800 dark:text-red-400 border-red-400 hover:bg-red-400/25"
+                : "bg-amber-400/50 dark:bg-amber-400/20 hover:bg-amber-400/25 text-amber-800 dark:text-amber-400 border-amber-400"
             )}
           >
             {serviceDays > 0 ? `${serviceDays} días` : "Ya expiró"}

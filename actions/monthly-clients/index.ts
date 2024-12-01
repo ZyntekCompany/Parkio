@@ -93,14 +93,6 @@ export async function checkAndSendReminders() {
   const fiveDaysFromNow = new Date();
   fiveDaysFromNow.setDate(now.getDate() + 5);
 
-  monthlyServiceExpirationReminderEmail(
-    "jamesrgal@gmail.com",
-    "James Galvis",
-    new Date(),
-    1,
-    "Parking NoA"
-  );
-
   try {
     const clients = await db.client.findMany({
       where: {
@@ -172,7 +164,7 @@ export async function createMonthlyClient(
     } = result.data;
 
     const existingClient = await db.client.findMany({
-      where: { plate, isActive: true },
+      where: { plate, isActive: true, parkingLotId: loggedUser.parkingLotId! },
     });
 
     if (existingClient.length > 0) {
