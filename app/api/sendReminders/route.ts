@@ -4,66 +4,62 @@ import { DateTime } from "luxon";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
+  const zone = "America/Bogota";
+  const now = DateTime.now().setZone(zone);
+  const fiveDaysFromNow = now.plus({ days: 5 });
+
   try {
-    const now = DateTime.now().setZone("America/Bogota").toJSDate();
-    const fiveDaysFromNow = DateTime.now()
-      .setZone("America/Bogota")
-      .plus({ days: 5 })
-      .toJSDate();
-
-    try {
-      const clients = await db.client.findMany({
-        where: {
-          clientCategory: "MONTHLY",
-          isActive: true,
-          endDate: {
-            gte: now,
-            lte: fiveDaysFromNow,
-          },
-          reminderSent: false,
+    const clients = await db.client.findMany({
+      where: {
+        clientCategory: "MONTHLY",
+        isActive: true,
+        endDate: {
+          gte: now.toJSDate(),
+          lte: fiveDaysFromNow.toJSDate(),
         },
-        include: {
-          parkingLot: true,
-        },
-      });
+        reminderSent: false,
+      },
+      include: { parkingLot: true },
+    });
 
-      console.log(clients);
-
-      for (const client of clients) {
-        if (client.email) {
-          const endDate = DateTime.fromJSDate(
-            new Date(client.endDate!)
-          ).setZone("America/Bogota");
-          const today = DateTime.now().setZone("America/Bogota");
-          const remainingDays = Math.ceil(endDate.diff(today, "days").days);
-
-          monthlyServiceExpirationReminderEmail(
-            client.email,
-            client.name!,
-            client.endDate!,
-            remainingDays,
-            client.parkingLot.name
-          );
-
-          await db.client.update({
-            where: { id: client.id },
-            data: { reminderSent: true },
-          });
-        }
-      }
-    } catch {
-      return NextResponse.json({ message: "Algo salió mal." }, { status: 500 });
+    if (clients.length === 0) {
+      return NextResponse.json(
+        { message: "No hay clientes para notificar." },
+        { status: 200 }
+      );
     }
 
+    // Procesar clientes en paralelo
+    await Promise.all(
+      clients.map(async (client) => {
+        if (!client.email) return;
+
+        const endDate = DateTime.fromJSDate(new Date(client.endDate!)).setZone(zone);
+        const remainingDays = Math.ceil(endDate.diff(now, "days").days);
+
+        await monthlyServiceExpirationReminderEmail(
+          client.email,
+          client.name!,
+          client.endDate!,
+          remainingDays,
+          client.parkingLot.name
+        );
+
+        await db.client.update({
+          where: { id: client.id },
+          data: { reminderSent: true },
+        });
+      })
+    );
+
     return NextResponse.json(
-      { message: "Función ejecutada." },
+      { message: "Recordatorios enviados exitosamente." },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error en la tarea programada:", error);
-
+    console.error("Error al procesar clientes:", error);
     return NextResponse.json(
-      { message: "Error al ejecutar la tarea" },
+      { message: "Error interno del servidor." },
       { status: 500 }
     );
   }
