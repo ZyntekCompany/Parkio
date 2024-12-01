@@ -21,13 +21,9 @@ import { createClientType } from "@/actions/business-config";
 
 interface AddVehicleFormProps {
   initialData?: ClientTypeColumns;
-  closeDialog: () => void;
 }
 
-export function AddClientForm({
-  initialData,
-  closeDialog,
-}: AddVehicleFormProps) {
+export function AddClientForm({ initialData }: AddVehicleFormProps) {
   const form = useForm<z.infer<typeof CreateClientTypeSchema>>({
     resolver: zodResolver(CreateClientTypeSchema),
     defaultValues: {
@@ -53,7 +49,6 @@ export function AddClientForm({
         toast.success("Proceso exitoso.", {
           description: success,
         });
-        closeDialog();
       }
     } catch {
       toast.error("Ocurrió un problema con tu solicitud.");

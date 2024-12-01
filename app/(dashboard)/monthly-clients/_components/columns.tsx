@@ -147,8 +147,6 @@ export const columns: ColumnDef<MonthlyClientColumns>[] = [
     cell: ({ row }) => {
       const serviceDays: number = row.getValue("serviceDays");
 
-      console.log(serviceDays <= 5);
-
       return (
         <div className="flex items-center gap-2 min-w-[100px] py-4">
           <Badge

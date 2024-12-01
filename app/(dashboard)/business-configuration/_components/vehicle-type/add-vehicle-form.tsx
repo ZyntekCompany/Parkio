@@ -22,13 +22,9 @@ import { createVehicleType } from "@/actions/business-config";
 
 interface AddVehicleFormProps {
   initialData?: VehicleTypeColumns;
-  closeDialog: () => void;
 }
 
-export function AddVehicleForm({
-  initialData,
-  closeDialog,
-}: AddVehicleFormProps) {
+export function AddVehicleForm({ initialData }: AddVehicleFormProps) {
   const form = useForm<z.infer<typeof CreateVehicleTypeSchema>>({
     resolver: zodResolver(CreateVehicleTypeSchema),
     defaultValues: {
@@ -54,7 +50,6 @@ export function AddVehicleForm({
         toast.success("Proceso exitoso.", {
           description: success,
         });
-        closeDialog();
       }
     } catch {
       toast.error("Ocurrió un problema con tu solicitud.");

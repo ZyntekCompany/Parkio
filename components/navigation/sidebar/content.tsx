@@ -8,6 +8,7 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { adminRoutes, employeeRoutes } from "@/constants";
 import { cn } from "@/lib/utils";
@@ -23,13 +24,24 @@ interface ContentProps {
 }
 
 export function Content({ isAdmin, hasFees, clientsCount }: ContentProps) {
+  const { setOpenMobile } = useSidebar();
+
+  function handleClose() {
+    setOpenMobile(false);
+  }
+
   return (
     <SidebarContent>
       <SidebarGroup>
         <SidebarGroupLabel>Aplicación</SidebarGroupLabel>
         <SidebarGroupContent>
           <SidebarMenu>
-            <RouteItem title="Panel" url="/" Icon={Home} />
+            <RouteItem
+              title="Panel"
+              url="/"
+              Icon={Home}
+              closeSidebar={handleClose}
+            />
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
@@ -53,6 +65,7 @@ export function Content({ isAdmin, hasFees, clientsCount }: ContentProps) {
                     Icon={Icon}
                     showMenuBadge
                     menuBadgeLabel={count}
+                    closeSidebar={handleClose}
                   />
                 );
               })}
@@ -66,7 +79,13 @@ export function Content({ isAdmin, hasFees, clientsCount }: ContentProps) {
         <SidebarGroupContent>
           <SidebarMenu>
             {adminRoutes.map(({ url, icon: Icon, title }) => (
-              <RouteItem key={url} title={title} url={url} Icon={Icon} />
+              <RouteItem
+                key={url}
+                title={title}
+                url={url}
+                Icon={Icon}
+                closeSidebar={handleClose}
+              />
             ))}
           </SidebarMenu>
         </SidebarGroupContent>

@@ -93,7 +93,6 @@ export function AddFeeForm({
           toast.success("Proceso exitoso.", {
             description: success,
           });
-          closeDialog();
         }
       } catch {
         toast.error("Ocurrió un problema con tu solicitud.");

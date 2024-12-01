@@ -17,7 +17,7 @@ export function AddClientTrigger() {
   return (
     <>
       <Modal title="Nuevo tipo de cliente" isOpen={open} onClose={closeDialog}>
-        <AddClientForm closeDialog={closeDialog} />
+        <AddClientForm />
       </Modal>
       <Button variant="primary" onClick={() => setOpen(true)}>
         <Plus />

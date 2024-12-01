@@ -7,7 +7,6 @@ import { Modal } from "@/components/common/modal";
 import { Button } from "@/components/ui/button";
 import { AddFeeForm } from "./add-fee-form";
 import { getClientTypes, getVehicleTypes } from "@/actions/business-config";
-import { VehicleType } from "@prisma/client";
 
 export function AddFeeTrigger() {
   const [open, setOpen] = useState(false);
@@ -40,7 +39,11 @@ export function AddFeeTrigger() {
   return (
     <>
       <Modal title="Agregar nueva tarifa" isOpen={open} onClose={closeDialog}>
-        <AddFeeForm vehicleTypes={vehicleTypes} clientTypes={clientTypes} closeDialog={closeDialog} />
+        <AddFeeForm
+          vehicleTypes={vehicleTypes}
+          clientTypes={clientTypes}
+          closeDialog={closeDialog}
+        />
       </Modal>
       <Button variant="primary" onClick={() => setOpen(true)}>
         <Plus />

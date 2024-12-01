@@ -13,11 +13,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-// import { PasswordInput } from "@/components/auth/password-input";
 import { cn } from "@/lib/utils";
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
@@ -27,10 +25,9 @@ import { PasswordInput } from "@/components/ui/password-input";
 
 interface RegisterFormProps {
   buttonLabel?: string;
-  closeDialog: () => void;
 }
 
-export function RegisterForm({ buttonLabel, closeDialog }: RegisterFormProps) {
+export function RegisterForm({ buttonLabel }: RegisterFormProps) {
   const form = useForm<z.infer<typeof CreateEmployeeSchema>>({
     resolver: zodResolver(CreateEmployeeSchema),
     defaultValues: {
@@ -58,7 +55,6 @@ export function RegisterForm({ buttonLabel, closeDialog }: RegisterFormProps) {
         toast.success("Proceso exitoso.", {
           description: success,
         });
-        closeDialog();
       }
     } catch {
       toast.error("Algo salió mal!");

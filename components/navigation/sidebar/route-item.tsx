@@ -11,6 +11,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface SidebarRouteItemProps {
   title: string;
@@ -18,6 +19,7 @@ interface SidebarRouteItemProps {
   Icon: LucideIcon;
   showMenuBadge?: boolean;
   menuBadgeLabel?: number;
+  closeSidebar: () => void;
 }
 
 export function RouteItem({
@@ -26,14 +28,16 @@ export function RouteItem({
   Icon,
   showMenuBadge,
   menuBadgeLabel,
+  closeSidebar,
 }: SidebarRouteItemProps) {
   const { state } = useSidebar();
+  const isMobile = useIsMobile();
   const pathname = usePathname();
 
   const isActive = pathname === url;
 
   return (
-    <SidebarMenuItem>
+    <SidebarMenuItem onClick={isMobile ? closeSidebar : () => {}}>
       <SidebarMenuButton
         isActive={isActive}
         tooltip={{
@@ -47,7 +51,13 @@ export function RouteItem({
           <span>{title}</span>
         </Link>
       </SidebarMenuButton>
-      {showMenuBadge && <SidebarMenuBadge><span className={cn(isActive && "text-white dark:text-white")}>{menuBadgeLabel}</span></SidebarMenuBadge>}
+      {showMenuBadge && (
+        <SidebarMenuBadge>
+          <span className={cn(isActive && "text-white dark:text-white")}>
+            {menuBadgeLabel}
+          </span>
+        </SidebarMenuBadge>
+      )}
     </SidebarMenuItem>
   );
 }

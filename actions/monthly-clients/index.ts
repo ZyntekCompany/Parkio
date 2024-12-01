@@ -7,7 +7,6 @@ import { z } from "zod";
 import {
   monthlyPaymentEmail,
   monthlyReservationUpdateEmail,
-  monthlyServiceExpirationReminderEmail,
 } from "@/lib/brevo";
 import { revalidatePath } from "next/cache";
 import { DateTime } from "luxon";
@@ -85,56 +84,6 @@ export async function getMonthlyClients() {
     return clients;
   } catch {
     return [];
-  }
-}
-
-export async function checkAndSendReminders() {
-  const now = DateTime.now().setZone("America/Bogota").toJSDate();
-  const fiveDaysFromNow = DateTime.now()
-    .setZone("America/Bogota")
-    .plus({ days: 5 })
-    .toJSDate();
-
-  try {
-    const clients = await db.client.findMany({
-      where: {
-        clientCategory: "MONTHLY",
-        isActive: true,
-        endDate: {
-          gte: now,
-          lte: fiveDaysFromNow,
-        },
-        reminderSent: false,
-      },
-      include: {
-        parkingLot: true,
-      },
-    });
-
-    for (const client of clients) {
-      if (client.email) {
-        const endDate = DateTime.fromJSDate(new Date(client.endDate!)).setZone(
-          "America/Bogota"
-        );
-        const today = DateTime.now().setZone("America/Bogota");
-        const remainingDays = Math.ceil(endDate.diff(today, "days").days);
-
-        monthlyServiceExpirationReminderEmail(
-          client.email,
-          client.name!,
-          client.endDate!,
-          remainingDays,
-          client.parkingLot.name
-        );
-
-        await db.client.update({
-          where: { id: client.id },
-          data: { reminderSent: true },
-        });
-      }
-    }
-  } catch {
-    return null;
   }
 }
 

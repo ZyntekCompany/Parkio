@@ -17,7 +17,7 @@ export function AddVehicleTrigger() {
   return (
     <>
       <Modal title="Nuevo tipo de vehiculo" isOpen={open} onClose={closeDialog}>
-        <AddVehicleForm closeDialog={closeDialog} />
+        <AddVehicleForm />
       </Modal>
       <Button variant="primary" onClick={() => setOpen(true)}>
         <Plus />

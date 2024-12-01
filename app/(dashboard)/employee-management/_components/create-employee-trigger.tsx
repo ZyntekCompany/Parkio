@@ -13,7 +13,7 @@ export function CreateEmployeeTrigger() {
   const closeDialog = () => {
     setOpen(false);
   };
-  
+
   return (
     <>
       <Modal
@@ -23,7 +23,7 @@ export function CreateEmployeeTrigger() {
         onClose={closeDialog}
         className="max-h-[500px] h-full"
       >
-        <RegisterForm buttonLabel="Crear usuario" closeDialog={closeDialog} />
+        <RegisterForm buttonLabel="Crear usuario" />
       </Modal>
       <Button variant="primary" onClick={() => setOpen(true)}>
         <Plus />
