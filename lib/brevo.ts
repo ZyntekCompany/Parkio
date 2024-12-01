@@ -443,7 +443,6 @@ export async function monthlyServiceExpirationReminderEmail(
   remainingDays: number,
   parkingName: string
 ) {
-  console.log("Envio de correo ejecutado.")
   const formattedExpirationDate = expirationDate.toLocaleDateString("es-CO", {
     day: "numeric",
     month: "long",
@@ -523,5 +522,95 @@ export async function monthlyServiceExpirationReminderEmail(
     await apiInstance.sendTransacEmail(smtpEmail);
   } catch (error) {
     console.error("Error al enviar el correo de recordatorio:", error);
+  }
+}
+
+export async function monthlyServiceExpiredEmail(
+  email: string,
+  name: string,
+  expirationDate: Date,
+  parkingName: string
+) {
+  const formattedExpirationDate = expirationDate.toLocaleDateString("es-CO", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
+  const smtpEmail = {
+    subject: "Servicio Mensual Expirado - Parkio",
+    to: [{ email: email, name: name }],
+    htmlContent: `
+      <html lang="es">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Servicio Mensual Expirado</title>
+          <style>
+              @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+              body { font-family: 'Open Sans', Arial, sans-serif; background-color: #f7f7f7; margin: 0; padding: 0; color: #333; line-height: 1.6; }
+              .container { width: 100%; max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+              .header { background-color: transparent; color: #555; padding: 17px; border-top-left-radius: 8px; border-bottom: 1px solid #e0e0e0; text-align: start; }
+              .content { padding: 20px 15px; }
+              h1 { margin: 0; font-size: 24px; font-weight: 600; }
+              p { margin-bottom: 15px; font-size: 16px; color: #555; }
+              .warning { 
+                  margin: 20px 0; 
+                  padding: 20px; 
+                  background-color: #EEF7FF; 
+                  border-radius: 8px; 
+                  border: 1px solid #B6E0FF; 
+                  text-align: start;
+              }
+              .warning p { 
+                  margin: 10px 0; 
+              }
+              .footer { text-align: center; margin-top: 30px; padding: 20px; font-size: 14px; color: #777; border-top: 1px solid #e0e0e0; }
+              .footer p { margin: 5px 0; }
+              .footer a { color: #003366; text-decoration: none; }
+              .action-button {
+                  display: inline-block;
+                  background-color: #FF6B00;
+                  color: white;
+                  padding: 12px 24px;
+                  text-decoration: none;
+                  border-radius: 6px;
+                  margin-top: 15px;
+              }
+          </style>
+      </head>
+      <body>
+          <div class="container">
+              <div class="header">
+                  <h1>Servicio Mensual Expirado</h1>
+              </div>
+              <div class="content">
+                  <p>Estimado/a ${name},</p>
+                  
+                  <div class="warning">
+                      <p>Su servicio de parqueo mensual ha expirado el <strong>${formattedExpirationDate}</strong>.</p>
+                  </div>
+
+                  <p>Para continuar utilizando nuestros servicios de parqueo, por favor acérquese a nuestras instalaciones para realizar la renovación.</p>
+
+                  <p>Si desea mantener su espacio de parqueo, le recomendamos realizar el pago lo antes posible para evitar inconvenientes.</p>
+              </div>
+              
+              <div class="footer">
+                  <p>Atentamente,</p>
+                  <p><strong>Equipo ${parkingName}</strong></p>
+              </div>
+          </div>
+      </body>
+      </html>
+    `,
+    sender: { name: parkingName, email: "parkiosystem@gmail.com" },
+  };
+
+  try {
+    // Enviar el correo
+    await apiInstance.sendTransacEmail(smtpEmail);
+  } catch (error) {
+    console.error("Error al enviar el correo de expiración:", error);
   }
 }
