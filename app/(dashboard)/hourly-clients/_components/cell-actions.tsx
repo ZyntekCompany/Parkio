@@ -1,29 +1,22 @@
 "use client";
 
 import { toast } from "sonner";
-import { Edit, MoreHorizontal, Trash2 } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 
-import { MonthlyClientColumns } from "./columns";
+import { HourlyClientColumns } from "./columns";
 import { Button } from "@/components/ui/button";
 import { AlertModal } from "@/components/common/alert-modal";
 import { Modal } from "@/components/common/modal";
-import { deleteMonthlyClient } from "@/actions/monthly-clients";
+import { deleteHourlyClient } from "@/actions/hourly-clients";
 import { useCurrentRole } from "@/hooks/use-current-role";
 import { cn } from "@/lib/utils";
 import { ClientType, UserRole, VehicleType } from "@prisma/client";
-import { MonthlyClientForm } from "./monthly-client-form";
+import { HourlyClientForm } from "./hourly-client-form";
 import { getClientTypes, getVehicleTypes } from "@/actions/business-config";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 interface CellActionProps {
-  data: MonthlyClientColumns;
+  data: HourlyClientColumns;
 }
 
 export function CellAction({ data }: CellActionProps) {
@@ -50,7 +43,7 @@ export function CellAction({ data }: CellActionProps) {
   const handleConfirm = () => {
     startTransition(async () => {
       try {
-        const { error, success } = await deleteMonthlyClient(data.id);
+        const { error, success } = await deleteHourlyClient(data.id);
 
         if (error) {
           toast.error("Algo salió mal.", {
@@ -87,9 +80,13 @@ export function CellAction({ data }: CellActionProps) {
         title="Corregir datos del cliente"
         isOpen={open}
         onClose={closeDialog}
-        className="max-h-[500px] h-full"
+        className={cn(
+          clientTypes.length === 1 || vehicleTypes.length === 1
+            ? "h-fit max-h-fit"
+            : "max-h-[500px] h-full"
+        )}
       >
-        <MonthlyClientForm
+        <HourlyClientForm
           initialData={data}
           vehicleTypes={vehicleTypes}
           clientTypes={clientTypes}
@@ -97,32 +94,6 @@ export function CellAction({ data }: CellActionProps) {
         />
       </Modal>
 
-      {/* <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon">
-            <span className="sr-only">Abrir menú</span>
-            <MoreHorizontal className="size-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-
-          <DropdownMenuItem onClick={() => setOpen(true)}>
-            <Edit className="size-4" />
-            Editar
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => setOpenAlertConfirmation(true)}
-            className={cn(
-              "dark:hover:focus:bg-rose-400/20 hover:focus:bg-rose-400/20 text-rose-400 hover:focus:text-rose-400 dark:hover:focus:text-rose-400",
-              role !== "SuperAdmin" && role !== "Admin" && "hidden"
-            )}
-          >
-            <Trash2 className="size-4 mr-2" />
-            Eliminar
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu> */}
       <div className="flex items-center gap-1 w-full justify-end">
         <Button variant="ghost" size="icon" onClick={() => setOpen(true)}>
           <Edit strokeWidth={2.5} className="size-4" />

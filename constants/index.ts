@@ -37,6 +37,17 @@ export const vehicleAndClientsTypeColumns: {
   { key: "creado", label: "Creado" },
 ];
 
+export const hourlyClientsColumns: {
+  key: string;
+  label: string;
+}[] = [
+  { key: "placa", label: "Placa" },
+  { key: "tipoVehiculo", label: "Tipo de Vehículo" },
+  { key: "tipoCliente", label: "Tipo de Cliente" },
+  { key: "fechaEntrada", label: "Fecha de Entrada" },
+  { key: "detallesPago", label: "Detalles de Pago" },
+];
+
 export const monthlyClientsColumns: {
   key: string;
   label: string;

@@ -14,6 +14,7 @@ const PlateInput = React.forwardRef<HTMLInputElement, PlateInputProps>(
     return (
       <div className="space-y-2">
         <Input
+          autoComplete="off"
           disabled={isSubmitting}
           maxLength={7}
           style={{ textTransform: "uppercase" }}

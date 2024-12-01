@@ -30,9 +30,12 @@ enum ClientCategory {
 }
 
 model ParkingLot {
-  id           String        @id @default(cuid())
-  name         String        @unique // Nombre del parqueadero
-  pqrsEmail    String
+  id             String  @id @default(cuid())
+  name           String  @unique // Nombre del parqueadero
+  pqrsEmail      String
+  hasHourlyLimit Boolean @default(false)
+  hourlyLimit    Int?
+
   users        User[] // Relación con usuarios (administradores y empleados)
   clients      Client[]
   clientTypes  ClientType[] // Relación con categorías de vehículos

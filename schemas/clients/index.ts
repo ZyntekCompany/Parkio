@@ -28,3 +28,15 @@ export const MonthlyClientSchema = z.object({
     required_error: "Por favor seleccione un tipo de vehículo.",
   }),
 });
+
+export const HourlyClientSchema = z.object({
+  plate: z.string().min(6, {
+    message: "La matrícula debe tener al menos 6 caracteres.",
+  }),
+  clientTypeId: z.string({
+    required_error: "Por favor seleccione un tipo de cliente.",
+  }),
+  vehicleTypeId: z.string({
+    required_error: "Por favor seleccione un tipo de vehículo.",
+  }),
+});

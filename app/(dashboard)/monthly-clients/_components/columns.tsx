@@ -84,7 +84,7 @@ export const columns: ColumnDef<MonthlyClientColumns>[] = [
 
       return (
         <div className="flex items-center gap-3 min-w-[160px] py-4">
-          <Badge className="bg-yellow-400 text-zinc-900">{plate}</Badge>
+          <Badge className="bg-yellow-400 hover:bg-yellow-500 text-zinc-900">{plate}</Badge>
         </div>
       );
     },

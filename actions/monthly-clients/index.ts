@@ -62,6 +62,7 @@ export async function getMonthlyClients() {
         plate: true,
         createdAt: true,
         endDate: true,
+        startDate: true,
         monthsReserved: true,
         vehicleType: {
           select: {
