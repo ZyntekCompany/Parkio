@@ -14,7 +14,7 @@ export function LogoutButton({ hideText }: LogoutButtonProps) {
   const handleLogout = async () => {
     try {
       await logout();
-    } catch (error) {
+    } catch {
       toast.error("Error.", {
         description: "Algo salió mal al cerrar sesión.",
       });

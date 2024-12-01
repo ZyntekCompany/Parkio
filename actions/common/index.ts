@@ -27,7 +27,7 @@ export async function getClientsCount() {
       monthlyClientsCount,
       hourlyClientsCount,
     };
-  } catch (error) {
+  } catch {
     return {
       monthlyClientsCount: 0,
       hourlyClientsCount: 0,

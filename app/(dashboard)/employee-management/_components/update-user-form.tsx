@@ -71,7 +71,7 @@ export function UpdateUserForm({
         });
         closeDialog();
       }
-    } catch (error) {
+    } catch {
       toast.error("Algo salió mal!");
     }
   };

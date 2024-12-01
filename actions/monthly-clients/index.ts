@@ -7,6 +7,7 @@ import { z } from "zod";
 import {
   monthlyPaymentEmail,
   monthlyReservationUpdateEmail,
+  monthlyServiceExpirationReminderEmail,
 } from "@/lib/brevo";
 import { revalidatePath } from "next/cache";
 import { DateTime } from "luxon";
@@ -82,8 +83,64 @@ export async function getMonthlyClients() {
     });
 
     return clients;
-  } catch (error) {
+  } catch {
     return [];
+  }
+}
+
+export async function checkAndSendReminders() {
+  const now = new Date();
+  const fiveDaysFromNow = new Date();
+  fiveDaysFromNow.setDate(now.getDate() + 5);
+
+  monthlyServiceExpirationReminderEmail(
+    "jamesrgal@gmail.com",
+    "James Galvis",
+    new Date(),
+    1,
+    "Parking NoA"
+  );
+
+  try {
+    const clients = await db.client.findMany({
+      where: {
+        clientCategory: "MONTHLY",
+        isActive: true,
+        endDate: {
+          gte: now,
+          lte: fiveDaysFromNow,
+        },
+        reminderSent: false,
+      },
+      include: {
+        parkingLot: true,
+      },
+    });
+
+    for (const client of clients) {
+      if (client.email) {
+        const endDate = DateTime.fromJSDate(new Date(client.endDate!)).setZone(
+          "America/Bogota"
+        );
+        const today = DateTime.now().setZone("America/Bogota");
+        const remainingDays = Math.ceil(endDate.diff(today, "days").days);
+
+        monthlyServiceExpirationReminderEmail(
+          client.email,
+          client.name!,
+          client.endDate!,
+          remainingDays,
+          client.parkingLot.name
+        );
+
+        await db.client.update({
+          where: { id: client.id },
+          data: { reminderSent: true },
+        });
+      }
+    }
+  } catch {
+    return null;
   }
 }
 
@@ -191,8 +248,7 @@ export async function createMonthlyClient(
     revalidatePath("/");
     revalidatePath("/monthly-clients");
     return { success: "Cliente creado." };
-  } catch (error) {
-    console.log(error);
+  } catch {
     return { error: "Algo salió mal en el proceso." };
   }
 }
@@ -220,7 +276,7 @@ export async function deleteMonthlyClient(id: string) {
     revalidatePath("/");
     revalidatePath("/monthly-clients");
     return { success: "Cliente eliminado." };
-  } catch (error) {
+  } catch {
     return { error: "Algo salió mal en el proceso." };
   }
 }
@@ -337,7 +393,7 @@ export async function updateMonthlyClient(
     revalidatePath("/");
     revalidatePath("/monthly-clients");
     return { success: "Cliente actualizado." };
-  } catch (error) {
+  } catch {
     return { error: "Algo salió mal en el proceso." };
   }
 }

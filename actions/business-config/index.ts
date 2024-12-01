@@ -148,8 +148,8 @@ export async function createVehicleType(
 
     revalidatePath("/business-configuration");
     return { success: "Tipo de vehiculo creado." };
-  } catch (error) {
-    console.log(error);
+  } catch {
+    
     return { error: "Algo salió mal en el proceso." };
   }
 }

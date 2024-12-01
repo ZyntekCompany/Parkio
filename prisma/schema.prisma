@@ -85,14 +85,14 @@ model Account {
 
 // Modelo de Cliente
 model Client {
-  id             String  @id @default(cuid())
+  id             String   @id @default(cuid())
   name           String? // Nombre, solo necesario para clientes mensuales
   document       String? // Documento, solo relevante y único para clientes mensuales
   phone          String? // Teléfono, solo para clientes mensuales
   plate          String // Matrícula del vehículo
   email          String?
   monthsReserved Int? // Solo para los usuarios mensuales
-  reminderSent Boolean? @default(false)
+  reminderSent   Boolean? @default(false)
 
   parkingLotId String
   parkingLot   ParkingLot @relation(fields: [parkingLotId], references: [id], onDelete: Cascade)

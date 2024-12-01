@@ -41,7 +41,7 @@ export async function monthlyPaymentEmail(
         @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
         body { font-family: 'Open Sans', Arial, sans-serif; background-color: #f7f7f7; margin: 0; padding: 0; color: #333; line-height: 1.6; }
         .container { width: 100%; max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
-        .header { background-color: #003366; color: #ffffff; padding: 17px; border-top-left-radius: 8px; border-top-right-radius: 8px; }
+        .header { background-color: transparent; color: #555; padding: 17px; border-top-left-radius: 8px; border-bottom: 1px solid #e0e0e0; text-align: start; }
         .content { padding: 20px 15px; }
         h1 { margin: 0; font-size: 24px; font-weight: 600; }
         p { margin-bottom: 15px; font-size: 16px; color: #555; }
@@ -84,8 +84,8 @@ export async function monthlyPaymentEmail(
   try {
     // Enviar el correo transaccional
     await apiInstance.sendTransacEmail(smtpEmail);
-  } catch (error) {
-    console.error("Error sending email:", error);
+  } catch {
+    console.error("Error sending email");
   }
 }
 
@@ -113,7 +113,7 @@ export async function monthlyReservationUpdateEmail(
         @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
         body { font-family: 'Open Sans', Arial, sans-serif; background-color: #f7f7f7; margin: 0; padding: 0; color: #333; line-height: 1.6; }
         .container { width: 100%; max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
-        .header { background-color: #003366; color: #ffffff; padding: 17px; border-top-left-radius: 8px; border-top-right-radius: 8px; }
+        .header { background-color: transparent; color: #555; padding: 17px; border-top-left-radius: 8px; border-bottom: 1px solid #e0e0e0; text-align: start; }
         .content { padding: 20px 15px; }
         h1 { margin: 0; font-size: 24px; font-weight: 600; }
         p { margin-bottom: 15px; font-size: 16px; color: #555; }
@@ -156,8 +156,8 @@ export async function monthlyReservationUpdateEmail(
   try {
     // Enviar el correo transaccional
     await apiInstance.sendTransacEmail(smtpEmail);
-  } catch (error) {
-    console.error("Error sending email:", error);
+  } catch {
+    console.error("Error sending email");
   }
 }
 
@@ -188,7 +188,7 @@ export async function sendEmployeeCredentialsEmail(
         @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
         body { font-family: 'Open Sans', Arial, sans-serif; background-color: #f7f7f7; margin: 0; padding: 0; color: #333; line-height: 1.6; }
         .container { width: 100%; max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
-        .header { background-color: #003366; color: #ffffff; padding: 20px; border-top-left-radius: 8px; border-top-right-radius: 8px; }
+        .header { background-color: transparent; color: #555; padding: 17px; border-top-left-radius: 8px; border-bottom: 1px solid #e0e0e0; text-align: start; }
         .content { padding: 20px 15px; }
         h1 { margin: 0; font-size: 24px; font-weight: 600; }
         p { margin-bottom: 15px; font-size: 16px; color: #555; }
@@ -277,8 +277,8 @@ export async function sendEmployeeCredentialsEmail(
   try {
     // Enviar el correo transaccional
     await apiInstance.sendTransacEmail(smtpEmail);
-  } catch (error) {
-    console.error("Error sending email:", error);
+  } catch {
+    console.error("Error sending email");
   }
 }
 
@@ -287,15 +287,6 @@ export async function sendPasswordChangeNotification(
   name: string,
   parkingName: string
 ) {
-  // Construye la URL base dinámicamente
-  const baseUrl = process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : process.env.HOST
-    ? `https://${process.env.HOST}`
-    : "http://localhost:3000"; // Fallback para desarrollo local
-
-  const loginUrl = `${baseUrl}/login`;
-
   smtpEmail.subject = `Cambio de Contraseña - ${parkingName}`;
   smtpEmail.to = [{ email: email, name: name }];
   smtpEmail.htmlContent = `
@@ -308,7 +299,7 @@ export async function sendPasswordChangeNotification(
         @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
         body { font-family: 'Open Sans', Arial, sans-serif; background-color: #f7f7f7; margin: 0; padding: 0; color: #333; line-height: 1.6; }
         .container { width: 100%; max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
-        .header { background-color: #003366; color: #ffffff; padding: 20px; border-top-left-radius: 8px; border-top-right-radius: 8px; }
+        .header { background-color: transparent; color: #555; padding: 17px; border-top-left-radius: 8px; border-bottom: 1px solid #e0e0e0; text-align: start; }
         .content { padding: 20px 15px; }
         h1 { margin: 0; font-size: 24px; font-weight: 600; }
         p { margin-bottom: 15px; font-size: 16px; color: #555; }
@@ -374,8 +365,8 @@ export async function sendPasswordChangeNotification(
   try {
     // Enviar el correo transaccional
     await apiInstance.sendTransacEmail(smtpEmail);
-  } catch (error) {
-    console.error("Error sending email:", error);
+  } catch {
+    console.error("Error sending email");
   }
 }
 
@@ -397,7 +388,7 @@ export async function monthlyServiceConfirmationEmail(
               @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
               body { font-family: 'Open Sans', Arial, sans-serif; background-color: #f7f7f7; margin: 0; padding: 0; color: #333; line-height: 1.6; }
               .container { width: 100%; max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
-              .header { background-color: #003366; color: #ffffff; padding: 17px; border-top-left-radius: 8px; border-top-right-radius: 8px; text-align: center; }
+              .header { background-color: transparent; color: #555; padding: 17px; border-top-left-radius: 8px; border-bottom: 1px solid #e0e0e0; text-align: start; }
               .content { padding: 20px 15px; }
               h1 { margin: 0; font-size: 24px; font-weight: 600; }
               p { margin-bottom: 15px; font-size: 16px; color: #555; }
@@ -440,7 +431,96 @@ export async function monthlyServiceConfirmationEmail(
   try {
     // Enviar el correo
     await apiInstance.sendTransacEmail(smtpEmail);
+  } catch {
+    console.error("Error al enviar el correo");
+  }
+}
+
+export async function monthlyServiceExpirationReminderEmail(
+  email: string,
+  name: string,
+  expirationDate: Date,
+  remainingDays: number,
+  parkingName: string
+) {
+  const formattedExpirationDate = expirationDate.toLocaleDateString("es-CO", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
+  const smtpEmail = {
+    subject: "Recordatorio: Próxima Expiración de Servicio - Parkio",
+    to: [{ email: email, name: name }],
+    htmlContent: `
+      <html lang="es">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Recordatorio de Expiración de Servicio</title>
+          <style>
+              @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+              body { font-family: 'Open Sans', Arial, sans-serif; background-color: #f7f7f7; margin: 0; padding: 0; color: #333; line-height: 1.6; }
+              .container { width: 100%; max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+              .header { background-color: transparent; color: #555; padding: 17px; border-top-left-radius: 8px; border-bottom: 1px solid #e0e0e0; text-align: start; }
+              .content { padding: 20px 15px; }
+              h1 { margin: 0; font-size: 24px; font-weight: 600; }
+              p { margin-bottom: 15px; font-size: 16px; color: #555; }
+              .warning { 
+                  margin: 20px 0; 
+                  padding: 20px; 
+                  background-color: #EEF7FF; 
+                  border-radius: 8px; 
+                  border: 1px solid #B6E0FF; 
+                  text-align: start;
+              }
+              .warning p { 
+                  margin: 10px 0; 
+              }
+              .footer { text-align: center; margin-top: 30px; padding: 20px; font-size: 14px; color: #777; border-top: 1px solid #e0e0e0; }
+              .footer p { margin: 5px 0; }
+              .footer a { color: #003366; text-decoration: none; }
+              .action-button {
+                  display: inline-block;
+                  background-color: #FF6B00;
+                  color: white;
+                  padding: 12px 24px;
+                  text-decoration: none;
+                  border-radius: 6px;
+                  margin-top: 15px;
+              }
+          </style>
+      </head>
+      <body>
+          <div class="container">
+              <div class="header">
+                  <h1>Recordatorio de Servicio de Parqueo Mensual</h1>
+              </div>
+              <div class="content">
+                  <p>Estimado/a ${name},</p>
+                  
+                  <div class="warning">
+                      <p>Su servicio de parqueo mensual está próximo a expirar. Quedan <strong>${remainingDays}</strong> días antes de la fecha de vencimiento</p>
+                  </div>
+
+                  <p>Le recordamos que su servicio de parqueo mensual vencerá el <strong>${formattedExpirationDate}</strong>. Para evitar interrupciones en su servicio, le recomendamos renovar su suscripción lo antes posible.</p>
+              </div>
+              
+              <div class="footer">
+                  <p>Atentamente,</p>
+                  <p><strong>Equipo ${parkingName}</strong></p>
+              </div>
+          </div>
+      </body>
+      </html>
+    `,
+    sender: { name: parkingName, email: "parkiosystem@gmail.com" },
+  };
+
+  try {
+    // Enviar el correo
+    await apiInstance.sendTransacEmail(smtpEmail);
   } catch (error) {
-    console.error("Error al enviar el correo:", error);
+    console.error("Error al enviar el correo de recordatorio:", error);
   }
 }

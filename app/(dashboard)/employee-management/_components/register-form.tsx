@@ -60,7 +60,7 @@ export function RegisterForm({ buttonLabel, closeDialog }: RegisterFormProps) {
         });
         closeDialog();
       }
-    } catch (error) {
+    } catch {
       toast.error("Algo salió mal!");
     }
   };

@@ -1,6 +1,5 @@
 import React from "react";
-import { differenceInDays, format } from "date-fns";
-import { es } from "date-fns/locale";
+import { DateTime } from "luxon";
 
 import { columns, MonthlyClientColumns } from "./columns";
 import { getMonthlyClients } from "@/actions/monthly-clients";
@@ -10,9 +9,13 @@ export async function MonthlyClientsTable() {
   const clients = await getMonthlyClients();
 
   const formattedClients: MonthlyClientColumns[] = clients.map((client) => {
-    const createdAt = new Date(client.createdAt);
-    const endDate = new Date(client.endDate!);
-    const today = new Date()
+    const createdAt = DateTime.fromJSDate(new Date(client.createdAt)).setZone(
+      "America/Bogota"
+    );
+    const endDate = DateTime.fromJSDate(new Date(client.endDate!)).setZone(
+      "America/Bogota"
+    );
+    const today = DateTime.now().setZone("America/Bogota");
 
     return {
       id: client.id,
@@ -26,9 +29,9 @@ export async function MonthlyClientsTable() {
       plate: client.plate,
       vehicleType: client.vehicleType.name,
       clientType: client.clientType.name,
-      createdAt: format(createdAt, "d 'de' MMMM, yyyy", { locale: es }),
-      endDate: format(endDate, "d 'de' MMMM, yyyy", { locale: es }),
-      serviceDays: differenceInDays(endDate, today),
+      createdAt: createdAt.setLocale("es").toFormat("d 'de' MMMM, yyyy"),
+      endDate: endDate.setLocale("es").toFormat("d 'de' MMMM, yyyy"),
+      serviceDays: Math.ceil(endDate.diff(today, "days").days),
     };
   });
 
