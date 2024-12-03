@@ -17,6 +17,24 @@ export const daysOfWeek = [
   "Domingo",
 ];
 
+export const profileTabs: {
+  value: string;
+  label: string;
+}[] = [
+  {
+    value: "general",
+    label: "General",
+  },
+  {
+    value: "password",
+    label: "Cambiar contraseña",
+  },
+  {
+    value: "schedule",
+    label: "Horario",
+  },
+];
+
 export const employeeManagementColumns: {
   key: string;
   label: string;

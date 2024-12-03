@@ -2,7 +2,7 @@
 
 import { toast } from "sonner";
 import { useState, useTransition } from "react";
-import { Loader, Trash2, X } from "lucide-react";
+import { Loader, Trash2 } from "lucide-react";
 
 import {
   Card,
@@ -11,22 +11,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { formatTimeTo12Hour } from "@/utils/format-time-to-twelve-hour";
 import { Button } from "@/components/ui/button";
 import { FormattedShift, FormattedWorkDay } from "@/types";
-import { daysOfWeek } from "@/constants";
 import { cn } from "@/lib/utils";
 import { AlertModal } from "@/components/common/alert-modal";
 import { deleteShifts } from "@/actions/shift-assigment";
+import { ShiftsTable } from "@/components/common/shifts-table";
 
 interface AssignedSchedulesProps {
   isSubmitting: boolean;
@@ -95,57 +85,12 @@ export function AssignedSchedules({
         </CardHeader>
         <CardContent>
           <div className="rounded-md border">
-            <Table className="min-w-[550px]">
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Día</TableHead>
-                  <TableHead>Turnos</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {workDays
-                  .sort(
-                    (a, b) =>
-                      daysOfWeek.indexOf(a.day) - daysOfWeek.indexOf(b.day) // Ordena según el índice
-                  )
-                  .map((schedule, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{schedule.day}</TableCell>
-                      <TableCell>
-                        {schedule.shifts.map((shift, index) => (
-                          <Badge
-                            key={index}
-                            className="group mr-2 mb-2 bg-muted-foreground/20 hover:bg-muted-foreground/50 p-2 text-foreground"
-                          >
-                            <div>
-                              {formatTimeTo12Hour(shift.startTime)} -{" "}
-                              {formatTimeTo12Hour(shift.endTime)}
-                            </div>
-                            <Button
-                              disabled={isSubmitting}
-                              variant="ghost"
-                              className={cn(
-                                "size-4 rounded-full p-2.5 hover:bg-rose-200 hover:text-rose-500 ml-2",
-                                isSubmitting && "hidden"
-                              )}
-                              onClick={() => onRemoveShift(schedule.day, index)}
-                            >
-                              <X strokeWidth={2.5} className="shrink-0" />
-                            </Button>
-                          </Badge>
-                        ))}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                {workDays.length === 0 && (
-                  <TableRow>
-                    <TableCell colSpan={2} className="h-24 text-center">
-                      Sin turnos asignados.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
+            <ShiftsTable
+              workDays={workDays}
+              isSubmitting={isLoading}
+              isEditable
+              onRemoveShift={onRemoveShift}
+            />
           </div>
         </CardContent>
         <CardFooter>

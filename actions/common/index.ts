@@ -43,12 +43,15 @@ export async function getEmployees() {
     const employees = await db.user.findMany({
       where: {
         parkingLotId: parkingLot?.id!,
+        role: {
+          in: ["Empleado", "Admin"],
+        },
       },
       include: {
         workDays: {
           include: {
-            shifts: true
-          }
+            shifts: true,
+          },
         },
       },
     });
@@ -56,5 +59,21 @@ export async function getEmployees() {
     return employees;
   } catch (error) {
     return [];
+  }
+}
+
+export async function getCurrentEmployee() {
+  try {
+    const loggedUser = await currentUser();
+
+    const employee = await db.user.findUnique({
+      where: {
+        id: loggedUser?.id!,
+      },
+    });
+
+    return employee;
+  } catch (error) {
+    return null;
   }
 }

@@ -1,8 +1,28 @@
 "use server";
 
+import { currentUser } from "@/lib/auth-user";
 import { db } from "@/lib/db";
 import { FormattedShift, FormattedWorkDay } from "@/types";
 import { revalidatePath } from "next/cache";
+
+export async function getWorkDaysByCurrentEmployeeId() {
+  try {
+    const loggedUser = await currentUser();
+
+    const workDays = await db.workDay.findMany({
+      where: {
+        userId: loggedUser?.id!,
+      },
+      include: {
+        shifts: true
+      }
+    });
+
+    return workDays;
+  } catch (error) {
+    return [];
+  }
+}
 
 export async function createShifts(
   data: {

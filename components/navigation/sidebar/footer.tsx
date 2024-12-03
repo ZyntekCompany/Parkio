@@ -1,4 +1,4 @@
-import { BadgeCheck, Bell, ChevronsUpDown } from "lucide-react";
+import { ChevronsUpDown } from "lucide-react";
 
 import {
   SidebarFooter,
@@ -18,6 +18,7 @@ import {
 import { currentUser } from "@/lib/auth-user";
 import UserAvatar from "@/components/common/user-avatar";
 import { LogoutButton } from "@/components/common/logout-button";
+import { AccountButton } from "@/components/common/account-button";
 
 export async function Footer() {
   const user = await currentUser();
@@ -32,7 +33,7 @@ export async function Footer() {
                 size="lg"
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               >
-                <UserAvatar src={user?.name!} userName={user?.name!} />
+                <UserAvatar src={user?.image!} userName={user?.name!} />
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">{user?.name}</span>
                   <span className="truncate text-xs">{user?.email}</span>
@@ -57,15 +58,7 @@ export async function Footer() {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem>
-                  <BadgeCheck />
-                  Cuenta
-                </DropdownMenuItem>
-
-                <DropdownMenuItem>
-                  <Bell />
-                  Notificaciones
-                </DropdownMenuItem>
+                <AccountButton />
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="p-0">
