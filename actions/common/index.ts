@@ -2,6 +2,7 @@
 
 import { currentUser } from "@/lib/auth-user";
 import { db } from "@/lib/db";
+import { getCurrentParkingLot } from "../business-config";
 
 export async function getClientsCount() {
   try {
@@ -32,5 +33,28 @@ export async function getClientsCount() {
       monthlyClientsCount: 0,
       hourlyClientsCount: 0,
     };
+  }
+}
+
+export async function getEmployees() {
+  try {
+    const parkingLot = await getCurrentParkingLot();
+
+    const employees = await db.user.findMany({
+      where: {
+        parkingLotId: parkingLot?.id!,
+      },
+      include: {
+        workDays: {
+          include: {
+            shifts: true
+          }
+        },
+      },
+    });
+
+    return employees;
+  } catch (error) {
+    return [];
   }
 }

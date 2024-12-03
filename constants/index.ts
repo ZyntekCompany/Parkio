@@ -7,6 +7,16 @@ import {
   UserCog,
 } from "lucide-react";
 
+export const daysOfWeek = [
+  "Lunes",
+  "Martes",
+  "Miércoles",
+  "Jueves",
+  "Viernes",
+  "Sábado",
+  "Domingo",
+];
+
 export const employeeManagementColumns: {
   key: string;
   label: string;

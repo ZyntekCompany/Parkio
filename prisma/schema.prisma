@@ -59,6 +59,7 @@ model User {
   parkingLotId String?
   parkingLot   ParkingLot? @relation(fields: [parkingLotId], references: [id])
 
+  workDays WorkDay[]
   accounts Account[]
 
   createdAt DateTime @default(now())
@@ -84,6 +85,35 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
+}
+
+// Modelo para representar los días de la semana y sus turnos
+model WorkDay {
+  id  String @id @default(cuid())
+  day String // Ejemplo: "Lunes", "Martes", etc.
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  shifts Shift[] // Relación con los turnos de este día
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([day, userId]) // Un usuario no puede tener dos WorkDay para el mismo día
+}
+
+// Modelo para representar turnos específicos en un día
+model Shift {
+  id        String @id @default(cuid())
+  startTime String // Hora de inicio del turno
+  endTime   String // Hora de finalización del turno
+
+  workDayId String
+  workDay   WorkDay @relation(fields: [workDayId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // Modelo de Cliente
