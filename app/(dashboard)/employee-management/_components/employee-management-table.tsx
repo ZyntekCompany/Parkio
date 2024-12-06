@@ -3,10 +3,10 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 
 import { DataTable } from "@/components/common/data-table";
-import { getUsers } from "@/actions/user";
 import { columns, UserColumns } from "./columns";
 import { currentUser } from "@/lib/auth-user";
 import { roles } from "@/constants";
+import { getUsers } from "@/actions/common";
 
 export async function EmployeeManagementTable() {
   const loggedUser = await currentUser();

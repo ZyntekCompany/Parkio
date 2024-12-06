@@ -1,5 +1,6 @@
 "use server";
 
+import { currentUser } from "@/lib/auth-user";
 import { db } from "@/lib/db";
 
 export async function getUserByEmail(email: string) {
@@ -31,22 +32,3 @@ export const getUserById = async (id?: string) => {
     return null;
   }
 };
-
-export async function getUsers(currentUserId: string) {
-  try {
-    const users = await db.user.findMany({
-      where: {
-        role: {
-          not: "SuperAdmin",
-        },
-        id: {
-          not: currentUserId,
-        },
-      },
-    });
-
-    return users;
-  } catch {
-    return [];
-  }
-}

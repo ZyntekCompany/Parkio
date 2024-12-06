@@ -1,11 +1,19 @@
 import {
   CalendarClock,
   ChartColumnBig,
+  ClipboardList,
   Clock,
   Cog,
   UserCheck,
   UserCog,
 } from "lucide-react";
+
+export const reportTypes = [
+  "Ganancias",
+  "Clientes por Hora",
+  "Clientes Mensuales",
+  "Clientes Mensuales Próximos a Expirar",
+];
 
 export const daysOfWeek = [
   "Lunes",
@@ -111,10 +119,15 @@ export const adminRoutes = [
     icon: ChartColumnBig,
   },
   {
-    title: "Asignación de turnos",
-    url: "/shift-assignment",
-    icon: CalendarClock,
+    title: "Reportes",
+    url: "/reports",
+    icon: ClipboardList,
   },
+  // {
+  //   title: "Asignación de turnos",
+  //   url: "/shift-assignment",
+  //   icon: CalendarClock,
+  // },
   {
     title: "Gestión de empleados",
     url: "/employee-management",

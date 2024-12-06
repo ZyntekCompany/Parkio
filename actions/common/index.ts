@@ -77,3 +77,25 @@ export async function getCurrentEmployee() {
     return null;
   }
 }
+
+export async function getUsers(currentUserId: string) {
+  try {
+    const loggedUser = await currentUser();
+
+    const users = await db.user.findMany({
+      where: {
+        role: {
+          not: "SuperAdmin",
+        },
+        id: {
+          not: currentUserId,
+        },
+        parkingLotId: loggedUser?.parkingLotId!,
+      },
+    });
+
+    return users;
+  } catch {
+    return [];
+  }
+}
