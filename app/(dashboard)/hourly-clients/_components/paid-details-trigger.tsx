@@ -59,11 +59,9 @@ export default function PaidDetailsTrigger({ data }: PaidDetailsTriggerProps) {
 
   return (
     <>
-      {/* <Button onClick={() => setIsOpen(true)}>Detalles de Pago</Button> */}
       <Button
         onClick={() => setIsOpen(true)}
         className="bg-emerald-400/50 dark:bg-emerald-400/20 hover:bg-emerald-400/60 text-emerald-800 dark:text-emerald-400 border-emerald-400/50 border ease-in-out shadow-md hover:shadow-lg"
-        // className="bg-gradient-to-r from-gray-500 to-gray-600 text-white hover:from-gray-600 hover:to-gray-700 transition-all duration-200  "
       >
         <CreditCard className="mr-2 h-4 w-4" />
         Detalles de Pago
@@ -109,7 +107,7 @@ export default function PaidDetailsTrigger({ data }: PaidDetailsTriggerProps) {
               Cancelar
             </Button>
             <Button
-              disabled={isLoading}
+              disabled={isLoading || paidDetails?.totalAmount === 0}
               variant="primary"
               onClick={handleConfirm}
             >

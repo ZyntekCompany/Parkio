@@ -22,6 +22,7 @@ export async function HourlyClientsTable() {
 
   return (
     <DataTable
+      inputPlateMask
       searchKey="plate"
       searchPlaceholder="Buscar por placa..."
       columns={columns}

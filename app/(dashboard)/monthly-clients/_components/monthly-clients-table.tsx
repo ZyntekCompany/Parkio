@@ -37,6 +37,7 @@ export async function MonthlyClientsTable() {
 
   return (
     <DataTable
+      inputPlateMask
       searchKey="plate"
       searchPlaceholder="Buscar por placa..."
       columns={columns}

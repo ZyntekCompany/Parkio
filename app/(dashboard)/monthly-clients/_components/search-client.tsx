@@ -96,7 +96,7 @@ export function SearchClient() {
                     <Search className="absolute left-3 size-4 text-muted-foreground" />
                     <Input
                       {...field}
-                      placeholder="Buscar por nombre, cédula o placa..."
+                      placeholder="Buscar por placa o cédula..."
                       className="pl-10"
                     />
                   </div>

@@ -9,7 +9,6 @@ import { FeesSelectorSkeleton } from "@/components/skeletons/fees-selector-skele
 export default function Dashboard() {
   return (
     <div className="space-y-6 xs:p-4">
-      {/* Para el administrador mostrar un componente que le indique cual es el empleado en el turno actual */}
       <WelcomeMessage />
       <Suspense fallback={<DashboardSkeleton />}>
         <DailyEarnings />

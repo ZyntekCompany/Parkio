@@ -50,6 +50,7 @@ interface DataTableProps<TData, TValue> {
   tableClassName?: string;
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  inputPlateMask?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -64,6 +65,7 @@ export function DataTable<TData, TValue>({
   tableClassName,
   columns,
   data,
+  inputPlateMask,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] =
@@ -89,9 +91,29 @@ export function DataTable<TData, TValue>({
         <Input
           placeholder={searchPlaceholder}
           value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn(searchKey)?.setFilterValue(event.target.value)
-          }
+          onChange={(event) => {
+            if (inputPlateMask) {
+              let inputValue = event.target.value;
+
+              inputValue = inputValue
+                .replace(/[^a-zA-Z0-9]/g, "")
+                .toUpperCase();
+
+              if (inputValue.length <= 3) {
+                inputValue = inputValue;
+              } else if (inputValue.length <= 6) {
+                inputValue = inputValue.replace(/(.{3})(.{0,3})/, "$1 $2");
+              } else {
+                inputValue = inputValue
+                  .slice(0, 6)
+                  .replace(/(.{3})(.{0,3})/, "$1 $2");
+              }
+
+              table.getColumn(searchKey)?.setFilterValue(inputValue);
+            } else {
+              table.getColumn(searchKey)?.setFilterValue(event.target.value);
+            }
+          }}
           className={cn("md-plus:max-w-sm", inputClassName)}
         />
         <div className="flex md:items-center sm:justify-end gap-3 w-full">

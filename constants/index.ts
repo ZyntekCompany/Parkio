@@ -37,10 +37,10 @@ export const profileTabs: {
     value: "password",
     label: "Cambiar contraseña",
   },
-  {
-    value: "schedule",
-    label: "Horario",
-  },
+  // {
+  //   value: "schedule",
+  //   label: "Horario",
+  // },
 ];
 
 export const employeeManagementColumns: {

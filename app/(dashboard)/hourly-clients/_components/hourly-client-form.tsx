@@ -1,8 +1,11 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { toast } from "sonner";
+import { useTransition } from "react";
+import { Loader } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -21,15 +24,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { HourlyClientColumns } from "./columns";
-import { toast } from "sonner";
-import { useTransition } from "react";
-import { Loader } from "lucide-react";
 import { HourlyClientSchema } from "@/schemas/clients";
 import {
   createHourlyClient,
   updateHourlyClient,
 } from "@/actions/hourly-clients";
 import { PlateInput } from "@/components/ui/plate-input";
+import { SelectableCard } from "./selectable-card";
 
 type FormValues = z.infer<typeof HourlyClientSchema>;
 
@@ -177,28 +178,45 @@ export function HourlyClientForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Tipo de cliente</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger className="h-12">
-                      <SelectValue placeholder="Seleccione un tipo de cliente" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
+                {clientTypes.length <= 3 ? (
+                  <div className="flex flex-wrap items-center gap-2">
                     {clientTypes.map((clientType) => (
-                      <SelectItem key={clientType.id} value={clientType.id}>
-                        {clientType.name}
-                      </SelectItem>
+                      <SelectableCard
+                        key={clientType.id}
+                        id={clientType.id}
+                        name={clientType.name}
+                        checked={field.value === clientType.id}
+                        onChange={(id) =>
+                          field.onChange(field.value === id ? "" : id)
+                        }
+                      />
                     ))}
-                  </SelectContent>
-                </Select>
+                  </div>
+                ) : (
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="h-12">
+                        <SelectValue placeholder="Seleccione un tipo de cliente" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {clientTypes.map((clientType) => (
+                        <SelectItem key={clientType.id} value={clientType.id}>
+                          {clientType.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
                 <FormMessage />
               </FormItem>
             )}
           />
         )}
+
         {vehicleTypes.length > 1 && (
           <FormField
             control={form.control}
@@ -206,23 +224,39 @@ export function HourlyClientForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Tipo de vehículo</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger className="h-12">
-                      <SelectValue placeholder="Seleccione un tipo de vehículo" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
+                {vehicleTypes.length <= 4 ? (
+                  <div className="flex flex-wrap gap-2">
                     {vehicleTypes.map((vehicleType) => (
-                      <SelectItem key={vehicleType.id} value={vehicleType.id}>
-                        {vehicleType.name}
-                      </SelectItem>
+                      <SelectableCard
+                        key={vehicleType.id}
+                        id={vehicleType.id}
+                        name={vehicleType.name}
+                        checked={field.value === vehicleType.id}
+                        onChange={(id) =>
+                          field.onChange(field.value === id ? "" : id)
+                        }
+                      />
                     ))}
-                  </SelectContent>
-                </Select>
+                  </div>
+                ) : (
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="h-12">
+                        <SelectValue placeholder="Seleccione un tipo de vehículo" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {vehicleTypes.map((vehicleType) => (
+                        <SelectItem key={vehicleType.id} value={vehicleType.id}>
+                          {vehicleType.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
                 <FormMessage />
               </FormItem>
             )}
