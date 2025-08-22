@@ -30,11 +30,11 @@ enum ClientCategory {
 }
 
 model ParkingLot {
-  id             String  @id @default(cuid())
-  name           String  @unique // Nombre del parqueadero
-  pqrsEmail      String
-  hasHourlyLimit Boolean @default(false)
-  hourlyLimit    Int?
+  id        String @id @default(cuid())
+  name      String @unique // Nombre del parqueadero
+  pqrsEmail String
+  // hasHourlyLimit Boolean @default(false)
+  // hourlyLimit    Int?
 
   users        User[] // Relación con usuarios (administradores y empleados)
   clients      Client[]
@@ -158,6 +158,9 @@ model Client {
 model ClientType {
   id   String @id @default(cuid())
   name String // Ejemplo: "Estudiante", "Particular"
+
+  hasHourlyLimit Boolean @default(false)
+  hourlyLimit    Int?
 
   parkingLotId String
   parkingLot   ParkingLot @relation(fields: [parkingLotId], references: [id], onDelete: Cascade)

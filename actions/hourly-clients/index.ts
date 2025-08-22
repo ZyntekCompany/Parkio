@@ -216,7 +216,12 @@ export async function calculateTotalFee(clientData: HourlyClientColumns) {
       },
       select: {
         entryDate: true,
-        parkingLot: true,
+        clientType: {
+          select: {
+            hasHourlyLimit: true,
+            hourlyLimit: true,
+          },
+        },
       },
     });
 
@@ -244,8 +249,8 @@ export async function calculateTotalFee(clientData: HourlyClientColumns) {
 
     const roundedHours = diffInMinutes > 0 ? diffInHours + 1 : diffInHours;
 
-    const hoursToCharge = client.parkingLot.hasHourlyLimit
-      ? Math.min(roundedHours, client.parkingLot.hourlyLimit!)
+    const hoursToCharge = client.clientType.hasHourlyLimit
+      ? Math.min(roundedHours, client.clientType.hourlyLimit!)
       : roundedHours;
 
     // Obtiene la tarifa del cliente
@@ -290,7 +295,7 @@ export async function getPaidDetails(clientData: HourlyClientColumns) {
     // Obtiene los datos del cliente
     const client = await db.client.findUnique({
       where: { id: clientData.id, parkingLotId: loggedUser?.parkingLotId! },
-      include: { parkingLot: true },
+      include: { clientType: true },
     });
 
     // Establece la hora de entrada en la zona horaria de Colombia
@@ -311,8 +316,8 @@ export async function getPaidDetails(clientData: HourlyClientColumns) {
 
     const roundedHours = diffInMinutes > 0 ? diffInHours + 1 : diffInHours;
 
-    const hoursToCharge = client?.parkingLot.hasHourlyLimit!
-      ? Math.min(roundedHours, client.parkingLot.hourlyLimit!)
+    const hoursToCharge = client?.clientType.hasHourlyLimit
+      ? Math.min(roundedHours, client.clientType.hourlyLimit!)
       : roundedHours;
 
     // Obtiene la tarifa del cliente
