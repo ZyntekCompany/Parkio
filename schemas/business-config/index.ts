@@ -10,12 +10,16 @@ export const CreateVehicleTypeSchema = z.object({
 });
 
 export const CreateClientTypeSchema = z.object({
-  name: z
-    .string()
-    .min(2, {
-      message: "El nombre debe tener mínimo dos caracteres.",
-    })
-    .trim(),
+  name: z.string().min(2, "El nombre debe tener mínimo dos caracteres.").trim(),
+  hasHourlyLimit: z.boolean().default(false),
+  hourlyLimit: z.number().nullable().optional(),
+});
+
+export const UpdateClientTypeSchema = z.object({
+  id: z.string(),
+  name: z.string().min(2, "El nombre debe tener mínimo dos caracteres.").trim(),
+  hasHourlyLimit: z.boolean().default(false),
+  hourlyLimit: z.number().nullable().optional(),
 });
 
 export const CreateFeeSchema = z.object({

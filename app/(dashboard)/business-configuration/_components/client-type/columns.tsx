@@ -7,6 +7,8 @@ import { CellAction } from "./cell-actions";
 export type ClientTypeColumns = {
   id: string;
   name: string;
+  hasHourlyLimit: boolean;
+  hourlyLimit: number | null,
   createdAt: string;
 };
 
@@ -20,6 +22,32 @@ export const columns: ColumnDef<ClientTypeColumns>[] = [
       return (
         <p className="py-4 min-w-[120px] text-muted-foreground text-sm">
           {name}
+        </p>
+      );
+    },
+  },
+  {
+    accessorKey: "hasHourlyLimit",
+    header: "Limite",
+    cell: ({ row }) => {
+      const hasHourlyLimit: boolean = row.getValue("hasHourlyLimit");
+
+      return (
+        <p className="py-4 min-w-[120px] text-muted-foreground text-sm">
+          {hasHourlyLimit ? "Si" : "No"}
+        </p>
+      );
+    },
+  },
+  {
+    accessorKey: "hourlyLimit",
+    header: "Limite de Horas",
+    cell: ({ row }) => {
+      const hourlyLimit: number | null = row.getValue("hourlyLimit");
+
+      return (
+        <p className="py-4 min-w-[120px] text-muted-foreground text-sm">
+          {hourlyLimit ? hourlyLimit : "No"}
         </p>
       );
     },

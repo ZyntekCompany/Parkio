@@ -12,6 +12,8 @@ export async function ClientTypeTable() {
     (clientType) => ({
       id: clientType.id,
       name: clientType.name,
+      hasHourlyLimit: clientType.hasHourlyLimit,
+      hourlyLimit: clientType.hourlyLimit,
       createdAt: format(clientType.createdAt, "dd/MM, yyyy", { locale: es }),
     })
   );

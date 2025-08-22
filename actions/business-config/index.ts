@@ -10,6 +10,7 @@ import {
   CreateClientTypeSchema,
   CreateFeeSchema,
   CreateVehicleTypeSchema,
+  UpdateClientTypeSchema,
 } from "@/schemas/business-config";
 
 export async function getCurrentParkingLot() {
@@ -127,8 +128,12 @@ export async function createVehicleType(
 
     const { name } = result.data;
 
+    if (!loggedUser?.parkingLotId) {
+      return { error: "No tienes un parqueadero asignado. Contacta al administrador del sistema para resolver este problema." };
+    }
+
     const existingVehicleType = await db.vehicleType.findFirst({
-      where: { name, parkingLotId: loggedUser?.parkingLotId! },
+      where: { name, parkingLotId: loggedUser.parkingLotId },
     });
 
     if (existingVehicleType) {
@@ -197,7 +202,83 @@ export async function deleteVehicleType(id: string) {
 export async function createClientType(
   values: z.infer<typeof CreateClientTypeSchema>
 ) {
+  console.log("createClientType called with values:", values);
+  
   const result = CreateClientTypeSchema.safeParse(values);
+  console.log("Schema validation result:", result);
+
+  if (result.error) {
+    console.log("Schema validation failed:", result.error);
+    return { error: "Datos inválidos." };
+  }
+
+  try {
+    const loggedUser = await currentUser();
+    console.log("Logged user:", loggedUser);
+    
+    const role = await currentRole();
+    console.log("User role:", role);
+
+    const isAdmin = role === "Admin" || role === "SuperAdmin";
+    console.log("Is admin:", isAdmin);
+
+    if (!isAdmin) {
+      return { error: "No tiene accesso a este proceso." };
+    }
+
+    const { name, hasHourlyLimit, hourlyLimit } = result.data;
+    console.log("Extracted data:", { name, hasHourlyLimit, hourlyLimit });
+
+    if (!name || name.trim().length < 2) {
+      return { error: "El nombre debe tener mínimo dos caracteres." };
+    }
+
+    if (!loggedUser?.parkingLotId) {
+      return { error: "No tienes un parqueadero asignado. Contacta al administrador del sistema para resolver este problema." };
+    }
+
+    const existingClientType = await db.clientType.findFirst({
+      where: { name, parkingLotId: loggedUser.parkingLotId },
+    });
+    console.log("Existing client type check:", existingClientType);
+
+    if (existingClientType) {
+      return { error: `El tipo de cliente '${name}' ya existe.` };
+    }
+
+    console.log("About to create client type with data:", {
+      name,
+      hasHourlyLimit,
+      hourlyLimit: hasHourlyLimit ? hourlyLimit : null,
+      parkingLotId: loggedUser?.parkingLotId
+    });
+
+    await db.clientType.create({
+      data: {
+        name,
+        hasHourlyLimit,
+        hourlyLimit: hasHourlyLimit ? hourlyLimit : null,
+        parkingLot: {
+          connect: {
+            id: loggedUser?.parkingLotId!,
+          },
+        },
+      },
+    });
+
+    console.log("Client type created successfully");
+    revalidatePath("/business-configuration");
+    return { success: "Tipo de cliente creado." };
+  } catch (error) {
+    console.error("Error in createClientType:", error);
+    return { error: "Algo salió mal en el proceso." };
+  }
+}
+
+export async function updateClientType(
+  values: z.infer<typeof UpdateClientTypeSchema>
+) {
+  const result = UpdateClientTypeSchema.safeParse(values);
 
   if (result.error) {
     return { error: "Datos inválidos." };
@@ -213,29 +294,40 @@ export async function createClientType(
       return { error: "No tiene accesso a este proceso." };
     }
 
-    const { name } = result.data;
+    const { id, name, hasHourlyLimit, hourlyLimit } = result.data;
 
+    if (!id) {
+      return { error: "ID del tipo de cliente requerido." };
+    }
+
+    if (!name || name.trim().length < 2) {
+      return { error: "El nombre debe tener mínimo dos caracteres." };
+    }
+
+    // Verificar si ya existe otro tipo de cliente con el mismo nombre
     const existingClientType = await db.clientType.findFirst({
-      where: { name, parkingLotId: loggedUser?.parkingLotId! },
+      where: {
+        name,
+        parkingLotId: loggedUser?.parkingLotId!,
+        id: { not: id }, // Excluir el registro actual
+      },
     });
 
     if (existingClientType) {
       return { error: `El tipo de cliente '${name}' ya existe.` };
     }
 
-    await db.clientType.create({
+    await db.clientType.update({
+      where: { id },
       data: {
         name,
-        parkingLot: {
-          connect: {
-            id: loggedUser?.parkingLotId!,
-          },
-        },
+        hasHourlyLimit,
+        hourlyLimit: hasHourlyLimit ? hourlyLimit : null,
       },
     });
 
     revalidatePath("/business-configuration");
-    return { success: "Tipo de cliente creado." };
+    return { success: "Tipo de cliente actualizado." };
   } catch {
     return { error: "Algo salió mal en el proceso." };
   }
@@ -298,13 +390,17 @@ export async function createFees(values: z.infer<typeof CreateFeeSchema>) {
       return { error: "No tiene accesso a este proceso." };
     }
 
+    if (!loggedUser?.parkingLotId) {
+      return { error: "No tienes un parqueadero asignado. Contacta al administrador del sistema para resolver este problema." };
+    }
+
     const { vehicleTypeId, clientTypeId, hourlyFee, monthlyFee } = result.data;
 
     const existingFee = await db.fee.findFirst({
       where: {
         vehicleTypeId,
         clientTypeId,
-        parkingLotId: loggedUser?.parkingLotId!,
+        parkingLotId: loggedUser.parkingLotId,
       },
     });
 

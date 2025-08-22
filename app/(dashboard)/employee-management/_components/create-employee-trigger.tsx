@@ -18,7 +18,7 @@ export function CreateEmployeeTrigger() {
     <>
       <Modal
         title="Crear nuevo empleado"
-        descripion="Registra nuevos empleados y otorga acceso al sistema."
+        description="Registra nuevos empleados y otorga acceso al sistema."
         isOpen={open}
         onClose={closeDialog}
         className="max-h-[500px] h-full"

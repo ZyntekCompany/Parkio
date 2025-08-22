@@ -1,13 +1,15 @@
 "use client";
 
 import { toast } from "sonner";
-import { Trash2 } from "lucide-react";
+import { Trash2, Edit } from "lucide-react";
 import { useState, useTransition } from "react";
 
 import { ClientTypeColumns } from "./columns";
 import { Button } from "@/components/ui/button";
 import { AlertModal } from "@/components/common/alert-modal";
 import { deleteClientType } from "@/actions/business-config";
+import { Modal } from "@/components/common/modal";
+import { AddClientForm } from "./add-client-form";
 
 interface CellActionProps {
   data: ClientTypeColumns;
@@ -15,13 +17,18 @@ interface CellActionProps {
 
 export function CellAction({ data }: CellActionProps) {
   const [isLoading, startTransition] = useTransition();
-  const [open, setOpen] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
 
-  const closeDialog = () => {
-    setOpen(false);
+  const closeDeleteDialog = () => {
+    setOpenDelete(false);
   };
 
-  const handleConfirm = () => {
+  const closeEditDialog = () => {
+    setOpenEdit(false);
+  };
+
+  const handleConfirmDelete = () => {
     startTransition(async () => {
       try {
         const { error, success } = await deleteClientType(data.id);
@@ -36,7 +43,7 @@ export function CellAction({ data }: CellActionProps) {
           toast.success("Proceso completado.", {
             description: success,
           });
-          setOpen(false);
+          setOpenDelete(false);
         }
       } catch {
         toast.error("Error", {
@@ -48,18 +55,37 @@ export function CellAction({ data }: CellActionProps) {
 
   return (
     <>
+      {/* Modal de eliminación */}
       <AlertModal
         title="¿Está seguro de eliminar este tipo de cliente?"
         description="Esta acción no se puede deshacer. Esto eliminará permanentemente el tipo de cliente y todas sus tarifas asociadas."
         isLoading={isLoading}
-        isOpen={open}
-        onClose={closeDialog}
-        onConfirm={handleConfirm}
+        isOpen={openDelete}
+        onClose={closeDeleteDialog}
+        onConfirm={handleConfirmDelete}
       />
 
-      <Button onClick={() => setOpen(true)} variant="destructive" size="icon">
-        <Trash2 />
-      </Button>
+      {/* Modal de edición */}
+      <Modal
+        title="Editar tipo de cliente"
+        description="Modifique la información del tipo de cliente."
+        isOpen={openEdit}
+        onClose={closeEditDialog}
+      >
+        <AddClientForm
+          initialData={data}
+          onSuccess={closeEditDialog}
+        />
+      </Modal>
+
+      <div className="flex items-center gap-2">
+        <Button onClick={() => setOpenEdit(true)} variant="outline" size="icon">
+          <Edit className="h-4 w-4" />
+        </Button>
+        <Button onClick={() => setOpenDelete(true)} variant="destructive" size="icon">
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      </div>
     </>
   );
 }

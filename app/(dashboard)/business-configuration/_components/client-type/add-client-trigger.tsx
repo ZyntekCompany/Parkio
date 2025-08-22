@@ -16,8 +16,13 @@ export function AddClientTrigger() {
 
   return (
     <>
-      <Modal title="Nuevo tipo de cliente" isOpen={open} onClose={closeDialog}>
-        <AddClientForm />
+      <Modal 
+        title="Nuevo tipo de cliente" 
+        description="Cree un nuevo tipo de cliente para su parqueadero."
+        isOpen={open} 
+        onClose={closeDialog}
+      >
+        <AddClientForm onSuccess={closeDialog} />
       </Modal>
       <Button variant="primary" onClick={() => setOpen(true)}>
         <Plus />

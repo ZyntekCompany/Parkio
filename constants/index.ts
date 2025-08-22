@@ -71,6 +71,8 @@ export const vehicleAndClientsTypeColumns: {
 }[] = [
   { key: "nombre", label: "Nombre" },
   { key: "creado", label: "Creado" },
+  { key: "limite", label: "Limite" },
+  { key: "limiteDeHoras", label: "Limite de Horas" },
 ];
 
 export const hourlyClientsColumns: {

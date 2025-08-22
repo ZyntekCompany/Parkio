@@ -82,12 +82,18 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
       },
     });
 
-    await db.parkingLot.create({
+    const parkingLot = await db.parkingLot.create({
       data: {
         name: parkingName,
         pqrsEmail: complaintsAndSuggestionsMail,
         users: { connect: { id: superAdminUser.id } },
       },
+    });
+
+    // Update the user's parkingLotId after creating the parking lot
+    await db.user.update({
+      where: { id: superAdminUser.id },
+      data: { parkingLotId: parkingLot.id },
     });
 
     monthlyServiceConfirmationEmail(

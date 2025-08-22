@@ -12,7 +12,7 @@ import { ScrollArea } from "../ui/scroll-area";
 
 interface ModalProps {
   title: string;
-  descripion?: string;
+  description?: string;
   isOpen: boolean;
   onClose: () => void;
   children?: React.ReactNode;
@@ -21,7 +21,7 @@ interface ModalProps {
 
 export function Modal({
   title,
-  descripion,
+  description,
   isOpen,
   onClose,
   children,
@@ -38,7 +38,7 @@ export function Modal({
         <ScrollArea>
           <DialogHeader className="px-6">
             <DialogTitle>{title}</DialogTitle>
-            <DialogDescription>{descripion}</DialogDescription>
+            <DialogDescription>{description}</DialogDescription>
           </DialogHeader>
 
           <div className="px-6 pt-4">{children}</div>

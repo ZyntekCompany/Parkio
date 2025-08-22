@@ -25,7 +25,7 @@ export function AlertModal({
   return (
     <Modal
       title={title}
-      descripion={description}
+      description={description}
       isOpen={isOpen}
       onClose={onClose}
     >
