@@ -38,7 +38,7 @@ export function Content({ isAdmin, hasFees, clientsCount }: ContentProps) {
           <SidebarMenu>
             <RouteItem
               title="Panel"
-              url="/"
+              url="/panel"
               Icon={Home}
               closeSidebar={handleClose}
             />

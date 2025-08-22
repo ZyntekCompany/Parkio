@@ -11,7 +11,7 @@ import { CreateClientTrigger } from "@/app/(dashboard)/hourly-clients/_component
 
 export function MainHeader() {
   return (
-    <header className="sticky top-0 flex h-16 shrink-0 items-center justify-between gap-2 px-4">
+    <header className="sticky top-0 flex h-16 shrink-0 items-center justify-between gap-2 px-4 border-b">
       <div className="flex items-center gap-2">
         <SidebarTrigger className="-ml-1" />
         <Separator orientation="vertical" className="mr-2 h-4" />
