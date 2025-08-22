@@ -65,8 +65,10 @@ export function LoginForm() {
   return (
     <div className="flex-1 flex items-center justify-center w-full min-h-full">
       <FormWrapper
-        headerTitle="Iniciar sesión"
-        headerSubtitle="Introduce tu correo y contraseña para acceder"
+        type="login"
+        title="Bienvenido de nuevo"
+        description="Ingresa y continúa gestionando tu parqueadero de manera fácil y segura."
+        className="lg:min-w-md"
       >
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -84,7 +86,7 @@ export function LoginForm() {
                         disabled={isSubmitting}
                         className={cn(
                           fieldState.invalid &&
-                            "focus-visible:ring-[#ef4444] border-[#ef4444]"
+                            "focus-visible:ring-[#ef4444] border-[#ef4444] bg-transparent"
                         )}
                         {...field}
                       />

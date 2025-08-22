@@ -66,8 +66,10 @@ export function RegisterForm() {
   return (
     <div className="flex-1 flex items-center justify-center w-full min-h-full">
       <FormWrapper
-        headerTitle="Nuevo Parqueadero"
-        headerSubtitle="Crea un nuevo espacio para la administración de un nuevo negocio"
+        type="register"
+        title="Nuevo Parqueadero"
+        description="Crea un nuevo espacio para la administración de un nuevo negocio."
+        className="lg:min-w-md"
       >
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)}>
@@ -197,9 +199,7 @@ export function RegisterForm() {
                   disabled={isSubmitting || !isValid}
                   className="w-full font-semibold rounded-lg"
                 >
-                  {isSubmitting && (
-                    <Loader className="h-5 w-5 animate-spin" />
-                  )}
+                  {isSubmitting && <Loader className="h-5 w-5 animate-spin" />}
                   Crear negocio
                 </Button>
               </div>

@@ -2,7 +2,7 @@
 
 import { Modal } from "@/components/common/modal";
 import { Button } from "@/components/ui/button";
-import { Clock, Plus } from "lucide-react";
+import { Plus, UserRoundPlus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { HourlyClientForm } from "./hourly-client-form";
 import { getClientTypes, getVehicleTypes } from "@/actions/business-config";
@@ -52,7 +52,8 @@ export function CreateClientTrigger({ isGlobal }: CreateClientTriggerProps) {
         className={cn(
           "h-fit max-h-fit",
           clientTypes.length > 1 &&
-            (vehicleTypes.length > 1 && "max-h-[500px] h-full")
+            vehicleTypes.length > 1 &&
+            "max-h-[500px] h-full"
         )}
       >
         <HourlyClientForm
@@ -71,12 +72,13 @@ export function CreateClientTrigger({ isGlobal }: CreateClientTriggerProps) {
         <Button
           variant="primary"
           className={cn(
-            "rounded-full size-9 p-0",
+            "rounded-full px-4",
             pathname === "/hourly-clients" && "hidden"
           )}
           onClick={() => setOpen(true)}
         >
-          <Clock className=" shrink-0" />
+          <UserRoundPlus className=" shrink-0" />
+          Nuevo cliente
         </Button>
       )}
     </>
